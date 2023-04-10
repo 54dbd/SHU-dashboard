@@ -3,10 +3,10 @@
   "version": "2.8.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "ng": "ng --port 8888",
+    "start": "ng serve --port 8888",
+    "build": "ng build --port 8888",
+    "test": "ng test --port 8888",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && ng serve -o"
