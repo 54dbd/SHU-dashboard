@@ -8,7 +8,8 @@ import * as Chartist from 'chartist';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+    constructor() { }
+
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
       seq = 0;

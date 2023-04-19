@@ -77,6 +77,9 @@ class CourseSelection(models.Model):
     def getDetails(self):
         return self.course_id,self.score,self.point
 
+    def can_delete(self):
+        return self.score == -1 and self.point == -1
+
     class Meta:
         db_table = "course_selection"
         app_label = 'course_selection'

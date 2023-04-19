@@ -6,7 +6,8 @@
                   <div class="card-header card-header-danger">
                       <h4 class="card-title ">已选课程</h4>
                       <p class="card-category">{{student_name}}
-                          <br/>学号{{student_id}}</p>
+                          <br/>学号{{student_id}} 性别{{student_sex}} 年龄{{student_age}} {{student_dept}}</p>
+
                   </div>
                   <div class="card-body">
                       <div class="table-responsive">
@@ -19,7 +20,7 @@
                                       课程名
                                   </th>
                                   <th>
-                                      学分
+                                      绩点
                                   </th>
                                   <th>
                                       开课系
@@ -35,6 +36,12 @@
                                     <td>{{class.point}}</td>
                                     <td>{{class.dept}}</td>
                                     <td>{{class.teacher}}</td>
+                                    <td class="td-actions text-left">
+                                              <button mat-raised-button type="button" matTooltip="删除" [matTooltipPosition]="'above'" class="btn btn-danger btn-link btn-sm btn-just-icon" (click)="removeCourse($event)">
+                                                  <i class="material-icons">close</i>
+                                              </button>
+                                        删除课程
+                                    </td>
                                 </tr>
                               </tbody>
                           </table>
@@ -71,11 +78,18 @@
                               </thead>
                               <tbody>
                                 <tr *ngFor="let class of selectableCourses">
+
                                     <td>{{class.id}}</td>
                                     <td>{{class.name}}</td>
                                     <td>{{class.point}}</td>
                                     <td>{{class.dept}}</td>
                                     <td>{{class.teacher}}</td>
+                                     <td class="td-actions text-left">
+                                              <button mat-raised-button type="button" matTooltip="选课" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon" (click)="addCourse($event)">
+                                                  <i class="material-icons">done</i>
+                                              </button>
+                                         添加课程
+                                    </td>
                                 </tr>
                               </tbody>
                           </table>
