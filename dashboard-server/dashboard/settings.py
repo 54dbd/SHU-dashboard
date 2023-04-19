@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [    'http://localhost:8888',]
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,11 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django.db.models',
-    # 'dashboard.models',
-    # 'student',
-    # 'course',
-    # 'course_selection',
-    # 'teacher'
+    'dashboard',
+    'corsheaders',
+
 ]
 REST_FRAMEWORK={
     'DEFAULT_PERMISSION_CLASSES':[
@@ -59,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'dashboard.urls'
@@ -89,10 +89,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME':  'school',
-        'USER': 'gaussdb',
-        'PASSWORD': 'Secretpassword@123',
-        'HOST': 'localhost',
-        'PORT': '15432'
+        'USER': 'admin',
+        'PASSWORD': 'admin@123',
+        'HOST': '116.63.153.200',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=school'
+        }
     }
 }
 

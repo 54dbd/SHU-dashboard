@@ -7,20 +7,21 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent implements OnInit {
-  student=""
-  constructor(private http: HttpClient) { }
-
   ngOnInit() {
 
   }
+  student:any;
+  constructor(private http: HttpClient) { }
 
   onClick(){
-    this.http.get<any>("localhost:8888/api/students").subscribe(res=>{
-      this.student = res;
-      alert(res);
-    })
+    let id = 1101;
+    this.http.get<any>("http://localhost:8000/api/students?id=1101").subscribe(res=>{
+      this.student = res.name;
+      // console.log(res);
+    });
 
   }
+
 
 }
 

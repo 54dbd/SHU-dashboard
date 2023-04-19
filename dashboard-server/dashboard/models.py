@@ -22,39 +22,22 @@ class Student(models.Model):
     username = models.CharField(max_length=10)
     password = models.CharField(max_length=10)
 
+    def getName(self):
+        return self.name
+    def getSex(self):
+        return self.sex
+    def getUsername(self):
+        return self.username
+    def getPassword(self):
+        return self.password
     def __str__(self):
-        return self.student_id
+        return self
 
     class Meta:
         db_table="student"
         app_label = 'student'
 
-class Course(models.Model):
-    course_id = models.CharField(max_length=8,primary_key=True)
-    course_name = models.CharField(max_length=10)
-    credit = models.IntegerField()
-    dept_id = models.ForeignKey(Department,db_column='dept_id', on_delete=models.CASCADE)
-    staff_id = models.CharField(max_length=4)
 
-    def __str__(self):
-        return self.course_id
-
-    class Meta:
-        db_table = "course"
-        app_label = 'course'
-
-class CourseSelection(models.Model):
-    student_id = models.ForeignKey(Student, db_column='student_id', on_delete=models.CASCADE)
-    course_id = models.ForeignKey(Course, db_column='course_id', on_delete=models.CASCADE)
-    score = models.DecimalField()
-    point = models.DecimalField()
-
-    def __str__(self):
-        return self.course_id,self.student_id
-
-    class Meta:
-        db_table = "course_selection"
-        app_label = 'course_selection'
 
 class Teacher(models.Model):
     staff_id = models.CharField(max_length=4,primary_key=True)
@@ -72,3 +55,28 @@ class Teacher(models.Model):
     class Meta:
         db_table = "teacher"
         app_label = 'teacher'
+class Course(models.Model):
+    course_id = models.CharField(max_length=8,primary_key=True)
+    course_name = models.CharField(max_length=10)
+    credit = models.IntegerField()
+    dept_id = models.ForeignKey(Department,db_column='dept_id', on_delete=models.CASCADE)
+    staff_id = models.ForeignKey(Teacher,db_column='staff_id',on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "course"
+        app_label = 'course'
+class CourseSelection(models.Model):
+    student_id = models.ForeignKey(Student, primary_key=True, db_column='student_id', on_delete=models.CASCADE)
+    course_id = models.ForeignKey(Course, primary_key=True, db_column='course_id', on_delete=models.CASCADE)
+    score = models.DecimalField()
+    point = models.DecimalField()
+
+    def __str__(self):
+        return self.course_id
+
+    def getDetails(self):
+        return self.course_id,self.score,self.point
+
+    class Meta:
+        db_table = "course_selection"
+        app_label = 'course_selection'
