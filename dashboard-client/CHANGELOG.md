@@ -1,151 +1,137 @@
-## [2.8.0] - 2022-11-28
-### Updates
-- update to Angular 14
-- update all dependencies to match Angular 14 version
+# CHANGELOG
 
-## [2.7.0] - 2022-04-03
-### Updates
-- update to Angular 13
-- update all dependencies to match Angular 13 version
+## [1.2.1] 2022-06-29
 
-## [2.6.0] - 2021-07-15
-### Updates
-- update to Angular 12
-- update all dependencies to match Angular 12 version
+- Update dependencies
+- Migrate from node-sass to sass
 
-When you build and serve your app it is possible that some warnings to appear on your terminal. Those will NOT affect your product.
+## [1.2.0] 2020-12-11
 
-## [2.5.0] - 2020-10-07
-### Updates
-- update to Angular 10
-- update all dependencies to match Angular 10 version
-
-
-## [2.4.0] - 2020-03-05
-### Updates
-- update to Angular 9
-- update all dependencies to match Angular 9 version
-
-## [2.3.0] - 2019-06-11
-### Updates
-- update to Angular 8
-- update all dependencies to match Angular 8 version
-```
-@agm/core                           1.0.0-beta.5   →   1.0.0-beta.6
-@angular/animations                        7.0.2   →          8.0.0
-@angular/cdk                               7.0.2   →          8.0.1
-@angular/common                            7.0.2   →          8.0.0
-@angular/compiler                          7.0.2   →          8.0.0
-@angular/core                              7.0.2   →          8.0.0
-@angular/forms                             7.0.2   →          8.0.0
-@angular/http                              7.0.2   →         7.2.15
-@angular/material                          7.0.2   →          8.0.1
-@angular/platform-browser                  7.0.2   →          8.0.0
-@angular/platform-browser-dynamic          7.0.2   →          8.0.0
-@angular/platform-server                   7.0.2   →          8.0.0
-@angular/router                            7.0.2   →          8.0.0
-ajv                                        6.4.0   →         6.10.0
-bootstrap                                  4.1.0   →          4.3.1
-bootstrap-material-design                  4.1.1   →          4.1.2
-chartist                                  0.11.0   →         0.11.2
-core-js                                    2.4.1   →          3.1.3
-express                                   4.16.3   →         4.17.1
-googleapis                                28.1.0   →         40.0.0
-jquery                                     3.2.1   →          3.4.1
-moment                                    2.22.1   →         2.24.0
-perfect-scrollbar                          1.1.0   →          1.4.0
-popper.js                                 1.14.3   →         1.15.0
-rxjs                                       6.3.3   →          6.5.2
-rxjs-compat                                6.3.3   →          6.5.2
-zone.js                                   0.8.26   →          0.9.1
-@angular-devkit/build-angular              0.6.3   →        0.800.2
-@angular/cli                               7.0.2   →          8.0.2
-@angular/compiler-cli                      7.0.2   →          8.0.0
-@angular/language-service                  7.0.2   →          8.0.0
-@types/bootstrap                          3.3.32   →          4.3.0
-@types/chartist                           0.9.34   →         0.9.46
-@types/googlemaps                         3.30.8   →         3.36.4
-@types/jasmine                            2.5.38   →         3.3.13
-@types/jquery                            1.10.31   →         3.3.29
-@types/node                               6.0.73   →         12.0.7
-codelyzer                                  4.2.1   →          5.1.0
-jasmine-core                               3.3.0   →          3.4.0
-karma                                      2.0.0   →          4.1.0
-karma-cli                                  1.0.1   →          2.0.0
-karma-coverage-istanbul-reporter           1.4.2   →          2.0.5
-karma-jasmine                              1.1.1   →          2.0.1
-karma-jasmine-html-reporter                1.4.0   →          1.4.2
-protractor                                 5.3.1   →          5.4.2
-ts-node                                    5.0.1   →          8.2.0
-tslint                                     5.9.1   →         5.17.0
-typescript                                 3.1.6   →          3.4.5
-```
 ### Bug fixing
-- browser console error
+
+- Added hooks support
+- https://github.com/creativetimofficial/black-dashboard-react/issues/19
+- https://github.com/creativetimofficial/black-dashboard-react/issues/17
+
+### Major style changes
+
+- All Bootstrap imports from `src/assets/scss/black-dashboard-react/bootstrap` have been changed with imports from `node_modules` from `Bootstrap`
+
+### Deleted components
+
+### Added components
+
+### Deleted dependencies
+
+- history (instead of using `history`, we'll be using `BrowserRouter` from `react-router-dom`)
+- @types/googlemaps
+- @types/react
+- @types/markerclustererplus
+- react-google-maps (Instead of it, we're going to use simple plain JS Google maps)
+
+### Added dependencies
+
+- node-sass-package-importer@5.3.2 (for importing `Bootstrap` from `node_modules`)
+- bootstrap@4.5.3 (instead of using downloaded zip of `Bootstrap`, we'll use it from `node_modules`)
+- jquery@3.5.1 (to stop `Bootstrap` warning on a clean install)
+
+### Updated dependencies
+
 ```
-href="#pablo" -> href="javascript:void(0)"
-href="#"      -> href="javascript:void(0)"
+@fortawesome/fontawesome-free    5.13.0   →   5.15.1
+chart.js                          2.9.3   →    2.9.4
+node-sass                        4.13.1   →   4.14.1
+react                           16.13.1   →   17.0.1
+react-chartjs-2                   2.9.0   →   2.11.1
+react-dom                       16.13.1   →   17.0.1
+react-notification-alert         0.0.12   →   0.0.13
+react-router-dom                  5.1.2   →    5.2.0
+react-scripts                     3.4.1   →    4.0.1
+reactstrap                        8.4.1   →    8.7.1
+eslint-plugin-flowtype           3.13.0   →    5.2.0
+typescript                        3.8.3   →    4.1.2
 ```
-- form-validation error from the `_forms.scss` file
+
+### Important Notes
+
+**The jQuery and TypeScript dependencies are installed only to stop console warnings on install. They are not actually used in our product. So the product is not based on jQuery, and it is not based on TypeScript!**
+
+### Warning
+
+_Some warnings may appear when running the installation command, but they do not affect the UI or the functionality of the product._
+_The following warnings will appear when running the installation command, but they do not affect the UI or the functionality of the product (they will be solved in our next update - they come from the plugins that we are using, and they haven't yet upgraded to the latest React version):_
+
 ```
-@include form-validation-state("valid", $label-color); -> @include form-validation-state("valid", $label-color, $form-feedback-icon-valid);
+npm WARN react-popper@1.3.7 requires a peer of react@0.14.x || ^15.0.0 || ^16.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN create-react-context@0.3.0 requires a peer of react@^0.14.0 || ^15.0.0 || ^16.0.0 but none is installed. You must install peer dependencies yourself.
 ```
-- added hash for google url validation
 
-## [2.2.0] - 2018-11-14
-### Changes
-- update to Angular 7
-- update all dependencies to match Angular 7 version
+Happy Hacking!
 
-## [2.1.1] - 2018-05-23
-### Fixes
-- changed some links
+## [1.1.0] 2020-03-13
 
-## [2.1.0] - 2018-04-27
-### Fixes
-- changed file structure
-- moved documentation online
+### Bug fixing
 
-## [2.0.0] - 2018-04-20
-### Fixes
-- added bootstrap 4
-- added angular 5
+- Github issues:
+  - https://github.com/creativetimofficial/black-dashboard-react/issues/8
+  - https://github.com/creativetimofficial/black-dashboard-react/issues/7
+  - https://github.com/creativetimofficial/black-dashboard-react/issues/6 (not really an issue, but was old and needed to close it)
+  - https://github.com/creativetimofficial/black-dashboard-react/issues/4
 
-## [1.4.2] - 2017-10-01
-### Fixes
-- added Perfect Scrollbar
-- added scrollTop on route change
-- added closeSidebar on mobile
-- autocompile scss files
-- fixes for IE
-- update package dependencies to 4.4.4
+### Major style changes
 
-## [1.4.1] - 2017-09-19
-### Material
-- added material.init()
-- fixed input float problem
-- fixed checkboxes in tabs
+### Deleted components
 
-## [1.4.0] - 2017-08-23
-### Changes for Angular 4
-- added angular-cli
-- update to Angular 4
+### Added components
 
-## [v1.3.0] 2017-08-23
-### skipped for sync with Angular 4 version convention
+### Deleted dependencies
 
-## [1.2.0] - 2017-04-05
-### Added
-- added Upgrade to PRO page
-- update package
-- made sidebar dynamic
+- bootstrap (styles are already added inside the scss folder)
 
-## [1.1.1] - 2017-03-21
-### Added
-- added "@types/core-js": "0.9.35" in package
+### Added dependencies
 
-## [1.1.0] - 2017-03-20
-### small fix
+- To stop consolde warnings on installation:
+  - eslint-plugin-flowtype@3.13.0
+  - @types/markerclustererplus@2.1.33
+  - @types/googlemaps@3.39.3
+  - typescript@3.8.3
+- For Creative Tim copyrights
+  - gulp@4.0.2
+  - gulp-append-prepend@1.0.8
 
-## [1.0.0] - 2017-01-30
-### initial Release
+### Updated dependencies
+
+```
+@types/react               16.4.16   →   16.9.23
+chart.js                    ^2.7.2   →     2.9.3
+history                      4.7.2   →    4.10.1
+node-sass                    4.9.3   →    4.13.1
+perfect-scrollbar            1.4.0   →     1.5.0
+prop-types                 ^15.6.2   →    15.7.2
+react                       16.5.2   →   16.13.0
+react-chartjs-2             ^2.7.4   →     2.9.0
+react-dom                   16.5.2   →   16.13.0
+react-notification-alert     0.0.8   →    0.0.12
+react-router-dom             4.3.1   →     5.1.2
+react-scripts                2.0.4   →     3.4.0
+reactstrap                   6.5.0   →     8.4.1
+```
+
+### Warning
+
+**There are some errors that come from the react-google-maps components, since they are using old React v16 syntax, this, at the moment does not affect the UI or the functionality of the product. If the issue will perssit in React v17, we will drop the usage of these components and replace them with other maps components. The following warnings on installation could not be solved, due to some of our dependencies, however, they do not affect the functionality or the UI of the product:**
+
+```
+npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm WARN deprecated core-js@2.6.11: core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.
+npm WARN deprecated popper.js@1.16.1: Popper changed home, find its new releases at @popperjs/core
+```
+
+**Also, the above, are only present in development, and not in production.**
+
+## [1.0.0] 2018-11-29
+
+### Original Release
+
+- Added Reactstrap as base framework
+- Added design from PRODUCT NAME by Creative Tim
