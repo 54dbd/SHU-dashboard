@@ -13,19 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
-import App from "App";
-
-// Material Dashboard 2 React Context Provider
-import { MaterialUIControllerProvider } from "context";
-
-ReactDOM.render(
-  <BrowserRouter>
-    <MaterialUIControllerProvider>
-      <App />
-    </MaterialUIControllerProvider>
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+export default {
+  labels: ["M", "T", "W", "T", "F", "S", "S"],
+  datasets: { label: "Sales", data: [50, 20, 10, 22, 50, 10, 40] },
+};

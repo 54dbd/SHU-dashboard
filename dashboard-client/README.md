@@ -1,24 +1,46 @@
-# [Black Dashboard React](https://demos.creative-tim.com/black-dashboard-react/#/dashboard) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https%3A%2F%2Fdemos.creative-tim.com%2Fblack-dashboard-react%2F%23%2Fadmin%2Fdashboard&text=Black%20Dashboard%20React%20by%20Creative%20Tim%20%7C%20Free%20React%20Admin%20Template&original_referer=https%3A%2F%2Fdemos.creative-tim.com%2Fblack-dashboard-react%2F&via=creativetim&hashtags=react%2Ccreativetim%2Cdark%2Cdashboard%2Cbootstrap%2Creactstrap%2Creactjs)
+# [Material Dashboard 2 React](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?url=https://www.creative-tim.com/product/material-dashboard-react&text=Check%20Material%20Dashboard%202%20react%20made%20by%20@CreativeTim%20#webdesign%20#dashboard%20#materialdesign%20#react%20https://www.creative-tim.com/product/material-dashboard-react)
 
-![version](https://img.shields.io/badge/version-1.2.1-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/black-dashboard-react.svg?maxAge=2592000)]() [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/black-dashboard-react.svg?maxAge=2592000)]() [![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/E4aHAQy)
+![version](https://img.shields.io/badge/version-2.1.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/material-dashboard-react.svg)](https://github.com/creativetimofficial/material-dashboard-react/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/material-dashboard-react.svg)](https://github.com/creativetimofficial/material-dashboard-react/issues?q=is%3Aissue+is%3Aclosed)
 
-![Product Gif](./github-assets/black-dashboard-react.gif)
+![Image](https://s3.amazonaws.com/creativetim_bucket/products/71/original/material-dashboard-react.jpg?1638950990)
 
-Black Dashboard React is a beautiful [Bootstrap 4](http://getbootstrap.com/), [Reacstrap](https://reactstrap.github.io/) and [React](https://reactjs.org/) ([create-react-app](https://github.com/facebook/create-react-app)) Admin Dashboard with a huge number of components built to fit together and look amazing. If you are looking for a tool to manage and visualize data about your business, this dashboard is the thing for you. It combines colors that are easy on the eye, spacious cards, beautiful typography, and graphics.
-Black Dashboard React comes packed with all plugins that you might need inside a project and documentation on how to get started. It is light and easy to use, and also very powerful.
+Material Dashboard 2 React is our newest free MUI Admin Template based on React. If you’re a developer looking to create an admin dashboard that is developer-friendly, rich with features, and highly customisable, here is your match. Our innovative MUI & React dashboard comes with a beautiful design inspired by Google's Material Design and it will help you create stunning websites & web apps to delight your clients.
 
-Black Dashboard React features over 16 individual components, giving you the freedom of choosing and combining. This means that there are thousands of possible combinations. All components can take variations in color, that you can easily modify using SASS files. You will save a lot of time going from prototyping to full-functional code because all elements are implemented.
-We thought about everything, so this dashboard comes with 2 versions, Dark Mode and Light Mode.
+**Fully Coded Elements**
+Material Dashboard 2 React is built with over 70 frontend individual elements, like buttons, inputs, navbars, nav tabs, cards, or alerts, giving you the freedom of choosing and combining. All components can take variations in color, which you can easily modify using MUI styled() API and sx prop. You will save a lot of time going from prototyping to full-functional code because all elements are implemented.
 
-Special thanks go for the owners of these plugins:
+This free MUI & React Dashboard is coming with prebuilt design blocks, so the development process is seamless,
+switching from our pages to the real website is very easy to be done.
 
-- [Perfect Scrollbar](http://utatti.github.io/perfect-scrollbar/) for the nice scrollbars for windows.
-- [React Chartjs](http://jerairrest.github.io/react-chartjs-2/) for the wonderful wrapper for charts.
-- [Chartjs](https://www.chartjs.org/) for the wonderful charts.
+Special thanks go to:
+- [Nepcha Analytics](https://nepcha.com?ref=readme) for the analytics tool. Nepcha is already integrated with Material Dashboard React. You can use it to gain insights into your sources of traffic.
 
-We are very excited to share this dashboard with you and we look forward to hearing your feedback!
+**Documentation built by Developers**
 
-**Example Pages** We wanted to fully display the power of this dashboard, so the kit comes packed with examples showing you how to use the components.
+Each element is well presented in very complex documentation.
+
+You can read more about the [documentation here](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/).
+
+**Example Pages**
+
+If you want to get inspiration or just show something directly to your clients, you can jump-start your development with our pre-built example pages. You will be able to quickly set up the basic structure for your web project.
+
+View [example pages here](https://demos.creative-tim.com/material-dashboard-react/#/dashboard).
+
+**HELPFUL LINKS**
+
+- View [Github Repository](https://github.com/creativetimofficial/material-dashboard-react)
+- Check [FAQ Page](https://www.creative-tim.com/faq)
+
+#### Special thanks
+
+During the development of this dashboard, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source:
+
+- [MUI](https://mui.com/) - The React UI library for faster and easier web development.
+- [React ChartJS 2](http://reactchartjs.github.io/react-chartjs-2/#/) - Simple yet flexible React charting for designers & developers.
+- [ChromaJS](https://gka.github.io/chroma.js/) - A small-ish zero-dependency JavaScript library for all kinds of color conversions and color scales.
+
+Let us know your thoughts below. And good luck with development!
 
 ## Table of Contents
 
@@ -36,99 +58,109 @@ We are very excited to share this dashboard with you and we look forward to hear
 
 ## Versions
 
-[<img src="./github-assets/html.png" width="60" height="60" />](https://www.creative-tim.com/product/black-dashboard)
-[<img src="./github-assets/react.svg" width="60" height="60" />](https://www.creative-tim.com/product/black-dashboard-react)[<img src="./github-assets/vuejs.png" width="60" height="60" />](https://www.creative-tim.com/product/vue-black-dashboard)
+[<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/master/logos/react-logo.png?raw=true" width="60" height="60" />](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr)
 
-| HTML                                                                                                                                                                | React                                                                                                                                                                   | Vue                                                                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![Black Dashboard HTML](https://s3.amazonaws.com/creativetim_bucket/products/93/thumb/opt_bd_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard) | [![Black Dashboard React](https://s3.amazonaws.com/creativetim_bucket/products/136/thumb/opt_bd_react.jpg)](https://www.creative-tim.com/product/black-dashboard-react) | [![Vue Black Dashboard](https://s3.amazonaws.com/creativetim_bucket/products/99/thumb/opt_bd_vue_thumbnail.jpg)](https://www.creative-tim.com/product/vue-black-dashboard) |
+| React |
+| ----- |
+
+| [![Material Dashboard React](https://s3.amazonaws.com/creativetim_bucket/products/71/thumb/material-dashboard-react.jpg?1638950990)](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr)
 
 ## Demo
 
-| Dashboard                                                                                                             | User Profile                                                                                                            | Tables                                                                                                               | Maps                                                                                                       | Notification                                                                                                                         |
-| --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| [![Start page](./github-assets/dashboard-page.png)](https://demos.creative-tim.com/black-dashboard-react/#/dashboard) | [![User profile page](./github-assets/user-page.png)](https://demos.creative-tim.com/black-dashboard-react/#/user-page) | [![Tables page ](./github-assets/table-page.png)](https://demos.creative-tim.com/black-dashboard-react/#/table-list) | [![Maps Page](./github-assets/maps-page.png)](https://demos.creative-tim.com/black-dashboard-react/#/maps) | [![Notification page](./github-assets/notifications-page.png)](https://demos.creative-tim.com/black-dashboard-react/#/notifications) |
+- [Dashboard](http://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-sudr)
+- [Profile](https://demos.creative-tim.com/material-dashboard-react/#/profile?ref=readme-sudr)
+- [RTL](https://demos.creative-tim.com/material-dashboard-react/#/rtl?ref=readme-sudr)
+- [Sign In](https://demos.creative-tim.com/material-dashboard-react/#/authentication/sign-in?ref=readme-sudr)
+- [Sign Up](https://demos.creative-tim.com/material-dashboard-react/#/authentication/sign-up?ref=readme-sudr)
 
-[View More](https://demos.creative-tim.com/black-dashboard-react/#/dashboard).
+[View More](https://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr).
 
 ## Quick start
 
 Quick start options:
 
-- Clone the repo: `git clone https://github.com/creativetimofficial/black-dashboard-react.git`.
-- [Download from Github](https://github.com/creativetimofficial/black-dashboard-react/archive/master.zip).
-- [Download from Creative Tim](https://www.creative-tim.com/product/black-dashboard-react).
+- Download from [Creative Tim](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr).
+
+## Terminal Commands
+
+1. Download and Install NodeJs LTS version from [NodeJs Official Page](https://nodejs.org/en/download/).
+2. Navigate to the root ./ directory of the product and run `yarn install` or `npm install` to install our local dependencies.
 
 ## Documentation
 
-The documentation for the Black Dashboard React is hosted at our [website](https://demos.creative-tim.com/black-dashboard-react/#/documentation/tutorial).
+The documentation for the Material Dashboard is hosted at our [website](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/?ref=readme-mdr).
 
-## File Structure
+### What's included
 
 Within the download you'll find the following directories and files:
 
 ```
-black-dashboard-react
-.
-├── package.json
-├── CHANGELOG.md
-├── ISSUE_TEMPLATE.md
-├── LICENSE.md
-├── README.md
-├── Documentation
-│   └── documentation.html
-├── github-assets
-│   └── react.svg
-├── public
-│   ├── index.html
-│   └── manifest.json
-└── src
-    ├── index.js
-    ├── logo-white.svg
-    ├── logo.svg
-    ├── routes.js
-    ├── assets
-    │   ├── css
-    │   ├── demo
-    │   ├── fonts
-    │   ├── img
-    │   └── scss
-    │       ├── black-dashboard
-    │       │   ├── bootstrap
-    │       │   │   ├── mixins
-    │       │   │   └── utilities
-    │       │   ├── custom
-    │       │   │   ├── cards
-    │       │   │   ├── mixins
-    │       │   │   ├── utilities
-    │       │   │   └── vendor
-    │       └── black-dashboard.scss
-    ├── components
-    │   ├── FixedPlugin
-    │   │   └── FixedPlugin.js
-    │   ├── Footer
-    │   │   └── Footer.js
-    │   ├── Navbars
-    │   │   ├── AdminNavbar.js
-    │   │   └── RTLNavbar.js
-    │   └── Sidebar
-    │       └── Sidebar.js
-    ├── layouts
-    │   ├── Admin
-    │   │   └── Admin.js
-    │   └── RTL
-    │       └── RTL.js
-    ├── variables
-    │   └── charts.js
-    └── views
-        ├── Dashboard.js
-        ├── Icons.js
-        ├── Map.js
-        ├── Notifications.js
-        ├── Rtl.js
-        ├── TableList.js
-        ├── Typography.js
-        └── UserProfile.js
+material-dashboard-react
+    ├── public
+    │   ├── apple-icon.png
+    │   ├── favicon.png
+    │   ├── index.html
+    │   ├── manifest.json
+    │   └── robots.txt
+    ├── src
+    │   ├── assets
+    │   │   ├── images
+    │   │   └── theme
+    │   │       ├── base
+    │   │       ├── components
+    │   │       ├── functions
+    │   │       ├── index.js
+    │   │       └── theme-rtl.js
+    │   │   └── theme-dark
+    │   │       ├── base
+    │   │       ├── components
+    │   │       ├── functions
+    │   │       ├── index.js
+    │   │       └── theme-rtl.js
+    │   ├── components
+    │   │   ├── MDAlert
+    │   │   ├── MDAvatar
+    │   │   ├── MDBadge
+    │   │   ├── MDBox
+    │   │   ├── MDButton
+    │   │   ├── MDInput
+    │   │   ├── MDPagination
+    │   │   ├── MDProgress
+    │   │   ├── MDSnackbar
+    │   │   └── MDTypography
+    │   ├── context
+    │   ├── examples
+    │   │   ├── Breadcrumbs
+    │   │   ├── Cards
+    │   │   ├── Charts
+    │   │   ├── Configurator
+    │   │   ├── Footer
+    │   │   ├── Items
+    │   │   ├── LayoutContainers
+    │   │   ├── Lists
+    │   │   ├── Navbars
+    │   │   ├── Sidenav
+    │   │   ├── Tables
+    │   │   └── Timeline
+    │   ├── layouts
+    │   │   ├── authentication
+    │   │   ├── billing
+    │   │   ├── dashboard
+    │   │   ├── notifications
+    │   │   ├── profile
+    │   │   ├── rtl
+    │   │   └── tables
+    │   ├── App.js
+    │   ├── index.js
+    │   └── routes.js
+    ├── .eslintrc.json
+    ├── .prettierrc.json
+    ├── CHANGELOG.md
+    ├── ISSUE_TEMPLATE.md
+    ├── jsconfig.json
+    ├── LICENSE.md
+    ├── package.json
+    └── README.md
 ```
 
 ## Browser Support
@@ -139,41 +171,42 @@ At present, we officially aim to support the last two versions of the following 
 
 ## Resources
 
-- Demo: https://demos.creative-tim.com/black-dashboard-react/#/dashboard
-- Download Page: https://www.creative-tim.com/product/black-dashboard-react
-- Documentation: https://demos.creative-tim.com/black-dashboard-react/#/documentation/tutorial
-- License Agreement: https://www.creative-tim.com/license
-- Support: https://www.creative-tim.com/contact-us
-- Issues: [Github Issues Page](https://github.com/creativetimofficial/black-dashboard-react/issues)
+- [Live Preview](https://demos.creative-tim.com/material-dashboard-react/#/dashboard?ref=readme-mdr)
+- [Download Page](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr)
+- Documentation is [here](https://www.creative-tim.com/learning-lab/react/overview/material-dashboard/?ref=readme-mdr)
+- [License Agreement](https://www.creative-tim.com/license?ref=readme-mdr)
+- [Support](https://www.creative-tim.com/contact-us?ref=readme-mdr)
+- Issues: [Github Issues Page](https://github.com/creativetimofficial/material-dashboard-react/issues)
+- [Nepcha Analytics](https://nepcha.com?ref=readme) - Analytics tool for your website
 
 ## Reporting Issues
 
-We use GitHub Issues as the official bug tracker for the Black Dashboard React. Here are some advices for our users that want to report an issue:
+We use GitHub Issues as the official bug tracker for the Material Dashboard React. Here are some advices for our users that want to report an issue:
 
-1. Make sure that you are using the latest version of the Black Dashboard React. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/).
+1. Make sure that you are using the latest version of the Material Dashboard React. Check the CHANGELOG from your dashboard on our [website](https://www.creative-tim.com/product/material-dashboard-react?ref=readme-mdr).
 2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
 3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
 
 ## Technical Support or Questions
 
-If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us) instead of opening an issue.
+If you have questions or need help integrating the product please [contact us](https://www.creative-tim.com/contact-us?ref=readme-mdr) instead of opening an issue.
 
 ## Licensing
 
-- Copyright 2022 Creative Tim (https://www.creative-tim.com)
-- Licensed under MIT (https://github.com/creativetimofficial/black-dashboard-react/blob/master/LICENSE.md)
+- Copyright 2021 [Creative Tim](https://www.creative-tim.com?ref=readme-mdr)
+- Creative Tim [license](https://www.creative-tim.com/license?ref=readme-mdr)
 
 ## Useful Links
 
-More products from Creative Tim: <https://www.creative-tim.com/products>
+- [More products](https://www.creative-tim.com/templates?ref=readme-mdr) from Creative Tim
 
-Tutorials: <https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w>
+- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
 
-Freebies: <https://www.creative-tim.com/products>
+- [Freebies](https://www.creative-tim.com/bootstrap-themes/free?ref=readme-mdr) from Creative Tim
 
-Affiliate Program (earn money): <https://www.creative-tim.com/affiliates/new>
+- [Affiliate Program](https://www.creative-tim.com/affiliates/new?ref=readme-mdr) (earn money)
 
-Social Media:
+##### Social Media
 
 Twitter: <https://twitter.com/CreativeTim>
 
