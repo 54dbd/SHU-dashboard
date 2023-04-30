@@ -1,85 +1,73 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
+class User(AbstractUser):
+    first_name = models.CharField(max_length=30, null=True, blank=True)
+    last_name = models.CharField(max_length=150, null=True, blank=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+class Class(models.Model):
+    class_id = models.AutoField(primary_key=True)
+    course_id = models.ForeignKey('Course', models.DO_NOTHING)
+    semester_id = models.ForeignKey('Semester', models.DO_NOTHING)
+    teacher_id = models.ForeignKey('Teacher', models.DO_NOTHING)
+    classroom = models.CharField(max_length=100, blank=True, null=True)
+    current_selection = models.IntegerField(blank=True, null=True)
+    max_selection = models.IntegerField(blank=True, null=True)
+    remaining_selection = models.IntegerField(blank=True, null=True)
+    time = models.CharField(max_length=100, blank=True, null=True)
+    start = models.CharField(max_length=100, blank=True, null=True)
+    end = models.CharField(max_length=100, blank=True, null=True)
+
+
+class Course(models.Model):
+    course_id = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    credit = models.IntegerField(blank=True, null=True)
+    gp_percentage = models.FloatField(blank=True, null=True)
+    dept_id = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
+
+
+class CourseSelection(models.Model):
+    course_selection_id = models.AutoField(primary_key=True)
+    student_id = models.ForeignKey('Student', models.DO_NOTHING)
+    class_id = models.ForeignKey(Class, models.DO_NOTHING,
+                                    db_column='class_id')  # Field renamed because it was a Python reserved word.
+    gp = models.FloatField(blank=True, null=True)
+    exam = models.FloatField(blank=True, null=True)
+    grade = models.FloatField(blank=True, null=True)
+    #    can_drop            tinyint(1) not null,
+    can_drop = models.IntegerField(blank=True, null=True)
+
+
 class Department(models.Model):
-    dept_id = models.CharField(max_length=2,primary_key=True)
-    dept_name = models.CharField(max_length=10)
-    address = models.CharField(max_length=20)
-    phone_code = models.CharField(max_length=20)
+    dept_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    address = models.CharField(max_length=9999, blank=True, null=True)
+    phone = models.CharField(max_length=100, blank=True, null=True)
 
-    def __str__(self):
-        return self.dept_id
 
-    class Meta:
-        db_table = "department"
-        app_label = 'department'
+class Major(models.Model):
+    major_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+
+class Semester(models.Model):
+    semester_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+
 
 class Student(models.Model):
-    student_id = models.CharField(max_length=4, primary_key=True)
-    name = models.CharField(max_length=10)
-    sex = models.CharField()
-    date_of_birth = models.DateField()
-    dept_id = models.ForeignKey(Department,db_column='dept_id', on_delete=models.CASCADE)
-    username = models.CharField(max_length=10)
-    password = models.CharField(max_length=10)
-
-    def getName(self):
-        return self.name
-    def getSex(self):
-        return self.sex
-    def getUsername(self):
-        return self.username
-    def getPassword(self):
-        return self.password
-    def __str__(self):
-        return self
-
-    class Meta:
-        db_table="student"
-        app_label = 'student'
-
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    student_id = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    gpa = models.FloatField(blank=True, null=True)
+    dept_id = models.ForeignKey(Department, models.DO_NOTHING)
+    major_id = models.ForeignKey(Major, models.DO_NOTHING)
 
 
 class Teacher(models.Model):
-    staff_id = models.CharField(max_length=4,primary_key=True)
-    name = models.CharField(max_length=10)
-    sex = models.CharField()
-    date_of_birth = models.DateField()
-    category = models.CharField(max_length=10)
-    dept_id = models.ForeignKey(Department,db_column='dept_id', on_delete=models.CASCADE)
-    username = models.CharField(max_length=10)
-    password = models.CharField(max_length=10)
-
-    def __str__(self):
-        return self.staff_id
-
-    class Meta:
-        db_table = "teacher"
-        app_label = 'teacher'
-class Course(models.Model):
-    course_id = models.CharField(max_length=8,primary_key=True)
-    course_name = models.CharField(max_length=10)
-    credit = models.IntegerField()
-    dept_id = models.ForeignKey(Department,db_column='dept_id', on_delete=models.CASCADE)
-    staff_id = models.ForeignKey(Teacher,db_column='staff_id',on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = "course"
-        app_label = 'course'
-class CourseSelection(models.Model):
-    student_id = models.ForeignKey(Student, primary_key=True, db_column='student_id', on_delete=models.CASCADE)
-    course_id = models.ForeignKey(Course, primary_key=True, db_column='course_id', on_delete=models.CASCADE)
-    score = models.DecimalField()
-    point = models.DecimalField()
-
-    def __str__(self):
-        return self.course_id
-
-    def getDetails(self):
-        return self.course_id,self.score,self.point
-
-    def can_delete(self):
-        return self.score == -1 and self.point == -1
-
-    class Meta:
-        db_table = "course_selection"
-        app_label = 'course_selection'
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    teacher_id = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    dept_id = models.ForeignKey(Department, models.DO_NOTHING)
