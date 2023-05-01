@@ -33,7 +33,7 @@ router.register(r'semester', views.SemesterViewSet)
 router.register(r'student', views.StudentViewSet)
 router.register(r'teacher', views.TeacherViewSet)
 router.register(r'user', views.UserViewSet)
-
+router.register(r'course-selection', views.CourseSelectionViewSet)
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),

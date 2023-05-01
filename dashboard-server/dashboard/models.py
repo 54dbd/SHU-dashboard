@@ -30,7 +30,7 @@ class Course(models.Model):
 
 class CourseSelection(models.Model):
     course_selection_id = models.AutoField(primary_key=True)
-    student_id = models.ForeignKey('Student', models.DO_NOTHING)
+    student_id = models.ForeignKey('Student', models.DO_NOTHING)  # Field renamed because it was a Python reserved word.
     class_id = models.ForeignKey(Class, models.DO_NOTHING,
                                     db_column='class_id')  # Field renamed because it was a Python reserved word.
     gp = models.FloatField(blank=True, null=True)

@@ -27,3 +27,16 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
         major = Major.objects.get(pk=major_id)
         validated_data.update(dept=dept, major=major)
         return super(StudentSerializer, self).create(validated_data)
+    def update(self, instance, validated_data):
+        student_id = self.initial_data.get('student_id', None)
+        student = Student.objects.get(pk=student_id)
+        dept = student.dept
+        major = student.major
+        dept_id = self.initial_data.get('dept_id', None)
+        major_id = self.initial_data.get('major_id', None)
+        if dept_id is not None:
+            dept = Department.objects.get(pk=dept_id)
+        if major_id is not None:
+            major = Major.objects.get(pk=major_id)
+        validated_data.update(dept=dept, major=major)
+        return super(StudentSerializer, self).update(instance, validated_data)

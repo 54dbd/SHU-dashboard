@@ -7,17 +7,17 @@ from dashboard.serializers.teacher import TeacherSerializer
 
 
 class ClassSerializer(serializers.HyperlinkedModelSerializer):
-    course = CourseSerializer(read_only=True)
-    semester = SemesterSerializer(read_only=True)
-    teacher = TeacherSerializer(read_only=True)
+    course_id = CourseSerializer(read_only=True)
+    semester_id = SemesterSerializer(read_only=True)
+    teacher_id = TeacherSerializer(read_only=True)
 
     class Meta:
         model = Class
         fields = [
             'class_id',
-            'course',
-            'semester',
-            'teacher',
+            'course_id',
+            'semester_id',
+            'teacher_id',
             'classroom',
             'current_selection',
             'max_selection',
@@ -34,5 +34,5 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
         course = Course.objects.get(pk=course_id)
         semester = Semester.objects.get(pk=semester_id)
         teacher = Teacher.objects.get(teacher_id=teacher_id)
-        validated_data.update(course=course, semaster=semester, teacher=teacher)
+        validated_data.update(course_id=course, semaster_id=semester, teacher_id=teacher)
         return super(ClassSerializer, self).create(validated_data)
