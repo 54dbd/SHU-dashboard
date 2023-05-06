@@ -27,7 +27,7 @@ import MDButton from "components/MDButton";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
@@ -37,7 +37,7 @@ function Basic() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const login = () => {
     // 获取用户名和密码输入框的值
 
@@ -61,7 +61,7 @@ function Basic() {
           });
 
           // 跳转到首页
-          navigate("/");
+          window.location.href = "/";
         } else {
           // 登录失败，提示错误信息
           response.json().then(() => {

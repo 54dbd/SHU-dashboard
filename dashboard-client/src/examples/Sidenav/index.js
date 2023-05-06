@@ -45,10 +45,15 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+import MDButton from "../../components/MDButton";
 
+function logout() {
+  localStorage.clear();
+  window.location.href = "/";
+}
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
+  const { miniSidenav, transparentSidenav, whiteSidenav, darkMode, sidenavColor } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
   const username = localStorage.getItem("username");
@@ -185,7 +190,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         </MDBox>
         <MDBox
           component={NavLink}
-          to="/"
+          to="/authentication/sign-in"
           display="flex"
           justifyContent="flex-start"
           alignItems="center"
@@ -212,6 +217,21 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
+      <MDBox p={2} mt="auto">
+        {username && (
+          <MDButton
+            component="a"
+            onClick={logout}
+            target="_blank"
+            rel="noreferrer"
+            variant="gradient"
+            color={sidenavColor}
+            fullWidth
+          >
+            退出
+          </MDButton>
+        )}
+      </MDBox>
     </SidenavRoot>
   );
 }
