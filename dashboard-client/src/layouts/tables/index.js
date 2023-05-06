@@ -30,42 +30,76 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import selectedCourseTableData from "layouts/tables/data/selectedCourseTableData";
 import allCourseTableData from "layouts/tables/data/allCourseTableData";
-import { useState } from "react";
-import MDAlert from "../../components/MDAlert";
-
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+// import MDButton from "../../components/MDButton";
+// import MDAlert from "../../components/MDAlert";
 function Tables() {
-  const floatStyle = {
-    position: "fixed",
-    bottom: 0,
-    right: 0,
-    zIndex: 1000,
-  };
-  const [successSB, setSuccessSB] = useState("");
-  const [errorSB, setErrorSB] = useState("");
-  const openSuccessSB = (results) => setSuccessSB(results);
-  const openErrorSB = (results) => setErrorSB(results);
   const { columns, rows, results } = selectedCourseTableData();
   const { columns: pColumns, rows: pRows, results: pResults } = allCourseTableData();
-  if (pResults === "选课成功!" && !successSB) {
-    openSuccessSB(pResults);
-  } else if (pResults === "你已经选过这门课啦!" && !errorSB) {
-    openErrorSB(pResults);
-  } else if (results === "删除课程成功!" && !successSB) {
-    openSuccessSB(results);
-  } else if (results === "已经有成绩啦！不能退课啦！" && !errorSB) {
-    openErrorSB(results);
+  // eslint-disable-next-line no-unused-vars
+  const [showToast, setShowToast] = useState(false);
+  function handleSuccess(content) {
+    toast.success(content, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      // onClose: () => setShowToast(false),
+    });
   }
+  function handleError(content) {
+    toast.error(content, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      // onClose: () => setShowToast(false),
+    });
+  }
+
+  useEffect(() => {
+    if (pResults === "选课成功!") {
+      setShowToast(true);
+      handleSuccess("选课成功!");
+    } else if (pResults === "你已经选过这门课啦!") {
+      setShowToast(true);
+      handleError("你已经选过这门课啦!");
+    } else if (results === "删除课程成功!") {
+      setShowToast(true);
+      handleSuccess("删除课程成功!");
+    } else if (results === "已经有成绩啦！不能退课啦！") {
+      setShowToast(true);
+      handleError("已经有成绩啦！不能退课啦！");
+    }
+  }, [pResults, results]);
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
-            <div style={floatStyle}>{errorSB && <MDAlert color="error">{errorSB}</MDAlert>}</div>
-            <div style={floatStyle}>
-              {successSB && <MDAlert color="success">{successSB}</MDAlert>}
-            </div>
             <Card>
+              <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+              />
               <MDBox
                 mx={2}
                 mt={-3}
