@@ -36,33 +36,76 @@ Coded by www.creative-tim.com
 */
 
 // Material Dashboard 2 React layouts
-import Dashboard from "layouts/dashboard";
 import Tables from "layouts/tables";
+import ScoreTables from "layouts/score-tables";
+import StudentTables from "layouts/student-tables";
+import TeacherTables from "layouts/teacher-tables";
+import DepartmentTables from "layouts/department-tables";
+import CourseTables from "layouts/course-tables";
 import Billing from "layouts/billing";
-import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
-import SignUp from "layouts/authentication/sign-up";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
 
 const routes = [
+  // student only
   {
     type: "collapse",
-    name: "Dashboard",
-    key: "dashboard",
-    icon: <Icon fontSize="small">dashboard</Icon>,
-    route: "/dashboard",
-    component: <Dashboard />,
-  },
-  {
-    type: "collapse",
-    name: "Tables",
+    name: "课程管理",
     key: "tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/tables",
     component: <Tables />,
+    permission: "student",
+  },
+  // teacher only
+  {
+    type: "collapse",
+    name: "成绩管理",
+    key: "score-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/score-tables",
+    component: <ScoreTables />,
+    permission: "teacher",
+  },
+  // admin only
+  {
+    type: "collapse",
+    name: "学生信息管理",
+    key: "student-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/student-tables",
+    component: <StudentTables />,
+    permission: "admin",
+  },
+  {
+    type: "collapse",
+    name: "教师信息管理",
+    key: "teacher-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/teacher-tables",
+    component: <TeacherTables />,
+    permission: "admin",
+  },
+  {
+    type: "collapse",
+    name: "学院信息管理",
+    key: "department-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/department-tables",
+    component: <DepartmentTables />,
+    permission: "admin",
+  },
+  {
+    type: "collapse",
+    name: "课程信息管理",
+    key: "course-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/course-tables",
+    component: <CourseTables />,
+    permission: "admin",
   },
   {
     type: "collapse",
@@ -71,38 +114,26 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
     component: <Billing />,
+    permission: "admin",
   },
   {
     type: "collapse",
-    name: "Notifications",
-    key: "notifications",
-    icon: <Icon fontSize="small">notifications</Icon>,
-    route: "/notifications",
-    component: <Notifications />,
-  },
-  {
-    type: "collapse",
-    name: "Profile",
+    name: "个人主页",
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,
     route: "/profile",
     component: <Profile />,
+    permission: "login",
   },
+  // every one
   {
     type: "collapse",
-    name: "Sign In",
+    name: "登录",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/authentication/sign-in",
     component: <SignIn />,
-  },
-  {
-    type: "collapse",
-    name: "Sign Up",
-    key: "sign-up",
-    icon: <Icon fontSize="small">assignment</Icon>,
-    route: "/authentication/sign-up",
-    component: <SignUp />,
+    permission: "any",
   },
 ];
 

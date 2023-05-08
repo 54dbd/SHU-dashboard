@@ -131,9 +131,14 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
-
+    permission_classes = [IsSelfOrAdmin]
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return User.objects.all()
+        else:
+            return User.objects.filter(id=self.request.user.id)
     def get_permissions(self):
-        if self.request.method == 'PUT':
+        if self.request.method == 'PUT' or self.request.method == 'GET':
             self.permission_classes = [IsSelfOrAdmin]
         else:
             self.permission_classes = [IsAdminUser]

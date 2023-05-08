@@ -58,6 +58,7 @@ function Basic() {
           // 登录成功，保存 token 到本地存储
           response.json().then((data) => {
             localStorage.setItem("token", data.access);
+            localStorage.setItem("id", username);
           });
 
           // 跳转到首页

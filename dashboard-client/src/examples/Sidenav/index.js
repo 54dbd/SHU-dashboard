@@ -57,6 +57,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
   const username = localStorage.getItem("username");
+  const UserPermission = localStorage.getItem("UserPermission");
   let textColor = "white";
 
   if (transparentSidenav || (whiteSidenav && !darkMode)) {
@@ -88,85 +89,44 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
   }, [dispatch, location]);
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
-  const renderRoutes = routes.map(({ type, name, icon, title, noCollapse, key, href, route }) => {
-    let returnValue;
-    if ((name === "Sign In" && username) || (name === "Sign Up" && username)) {
-      // 如果当前遍历到的 name 是 "sign in" 并且有缓存的 token，就返回 null 不渲染该元素
-      returnValue = null;
-    } else if (type === "collapse" && username) {
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
-    } else if (type === "title" && username) {
-      returnValue = (
-        <MDTypography
-          key={key}
-          color={textColor}
-          display="block"
-          variant="caption"
-          fontWeight="bold"
-          textTransform="uppercase"
-          pl={3}
-          mt={2}
-          mb={1}
-          ml={1}
-        >
-          {title}
-        </MDTypography>
-      );
-    } else if (type === "divider" && username) {
-      returnValue = (
-        <Divider
-          key={key}
-          light={
-            (!darkMode && !whiteSidenav && !transparentSidenav) ||
-            (darkMode && !transparentSidenav && whiteSidenav)
-          }
-        />
-      );
-    } else {
-      // 如果不是 "sign in" 或者没有 token，就正常渲染该元素
-      returnValue = href ? (
-        <Link
-          href={href}
-          key={key}
-          target="_blank"
-          rel="noreferrer"
-          sx={{ textDecoration: "none" }}
-        >
-          <SidenavCollapse
-            name={name}
-            icon={icon}
-            active={key === collapseName}
-            noCollapse={noCollapse}
-          />
-        </Link>
-      ) : (
-        <NavLink key={key} to={route}>
-          <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
-        </NavLink>
-      );
-    }
+  const renderRoutes = routes.map(
+    // eslint-disable-next-line no-unused-vars
+    ({ type, name, icon, title, noCollapse, key, href, route, permission }) => {
+      let returnValue;
+      if (key === "sign-in" && username) {
+        // 如果当前遍历到的 name 是 "sign in" 并且有缓存的 token，就返回 null 不渲染该元素
+        returnValue = null;
+      } else if (
+        type === "collapse" &&
+        (permission === "any" ||
+          permission === UserPermission ||
+          (username && permission === "login"))
+      ) {
+        returnValue = href ? (
+          <Link
+            href={href}
+            key={key}
+            target="_blank"
+            rel="noreferrer"
+            sx={{ textDecoration: "none" }}
+          >
+            <SidenavCollapse
+              name={name}
+              icon={icon}
+              active={key === collapseName}
+              noCollapse={noCollapse}
+            />
+          </Link>
+        ) : (
+          <NavLink key={key} to={route}>
+            <SidenavCollapse name={name} icon={icon} active={key === collapseName} />
+          </NavLink>
+        );
+      }
 
-    return returnValue;
-  });
+      return returnValue;
+    }
+  );
 
   return (
     <SidenavRoot

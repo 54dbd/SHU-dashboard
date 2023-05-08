@@ -54,6 +54,7 @@ export default function App() {
   const { pathname } = useLocation();
 
   // Get the userInfo
+  const id = localStorage.getItem("id");
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -63,10 +64,17 @@ export default function App() {
   });
   useEffect(() => {
     api
-      .get(`/student/`)
+      .get(`/user/${id}`)
       .then((response) => {
-        setUsername(response.data[0].name);
-        localStorage.setItem("username", response.data[0].name);
+        if (!response.data.student && !response.data.teacher) {
+          setUsername(response.data.username);
+        } else if (response.data.student) {
+          setUsername(response.data.student.name);
+        } else if (response.data.teacher) {
+          setUsername(response.data.teacher.name);
+        }
+        localStorage.setItem("username", response.data.name);
+        localStorage.setItem("UserPermission", response.data.permissions);
       })
       .catch((error) => {
         console.log(error);
@@ -159,7 +167,7 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/profile" />} />
       </Routes>
     </ThemeProvider>
   );

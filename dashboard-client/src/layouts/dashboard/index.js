@@ -28,8 +28,8 @@ import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 
 // Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
+import reportsBarChartData from "layouts/profile/data/reportsBarChartData";
+import reportsLineChartData from "layouts/profile/data/reportsLineChartData";
 
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";

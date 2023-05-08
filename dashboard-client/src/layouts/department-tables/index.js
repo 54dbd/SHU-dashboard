@@ -37,7 +37,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // import MDButton from "../../components/MDButton";
 // import MDAlert from "../../components/MDAlert";
-function Tables() {
+function DepartmentTables() {
   // eslint-disable-next-line prefer-const
   const { columns: pColumns, rows: pRows, results: pResults } = allCourseTableData();
   // eslint-disable-next-line prefer-const
@@ -175,4 +175,4 @@ function Tables() {
   );
 }
 
-export default Tables;
+export default DepartmentTables;
