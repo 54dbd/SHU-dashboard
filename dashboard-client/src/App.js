@@ -21,10 +21,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React example components
 import Sidenav from "examples/Sidenav";
@@ -40,7 +38,7 @@ import themeDark from "assets/theme-dark";
 import routes from "routes";
 
 // Material Dashboard 2 React contexts
-import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "context";
+import { useMaterialUIController, setMiniSidenav, setSidenavColor } from "context";
 
 // Images
 import brand from "assets/images/logo-shu.png";
@@ -48,7 +46,7 @@ import axios from "axios";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
-  const { miniSidenav, direction, layout, openConfigurator, sidenavColor, darkMode } = controller;
+  const { miniSidenav, direction, layout, sidenavColor, darkMode } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [username, setUsername] = useState(null);
   const { pathname } = useLocation();
@@ -68,10 +66,13 @@ export default function App() {
       .then((response) => {
         if (!response.data.student && !response.data.teacher) {
           setUsername(response.data.username);
+          setSidenavColor(dispatch, "error");
         } else if (response.data.student) {
+          setSidenavColor(dispatch, "info");
           setUsername(response.data.student.name);
         } else if (response.data.teacher) {
           setUsername(response.data.teacher.name);
+          setSidenavColor(dispatch, "success");
         }
         localStorage.setItem("username", response.data.name);
         localStorage.setItem("UserPermission", response.data.permissions);
@@ -95,9 +96,6 @@ export default function App() {
       setOnMouseEnter(false);
     }
   };
-
-  // Change the openConfigurator state
-  const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
 
   // Setting the dir attribute for the body element
   useEffect(() => {
@@ -123,30 +121,6 @@ export default function App() {
       return null;
     });
 
-  const configsButton = (
-    <MDBox
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="3.25rem"
-      height="3.25rem"
-      bgColor="white"
-      shadow="sm"
-      borderRadius="50%"
-      position="fixed"
-      right="2rem"
-      bottom="2rem"
-      zIndex={99}
-      color="dark"
-      sx={{ cursor: "pointer" }}
-      onClick={handleConfiguratorOpen}
-    >
-      <Icon fontSize="small" color="inherit">
-        settings
-      </Icon>
-    </MDBox>
-  );
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
@@ -161,7 +135,6 @@ export default function App() {
             onMouseLeave={handleOnMouseLeave}
           />
           <Configurator />
-          {configsButton}
         </>
       )}
       {layout === "vr" && <Configurator />}
