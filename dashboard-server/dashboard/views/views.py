@@ -126,7 +126,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
         instance.user.delete()
         instance.delete()
 
-
+ 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer

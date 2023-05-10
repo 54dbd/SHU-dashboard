@@ -37,6 +37,7 @@ class CourseSelection(models.Model):
     exam = models.FloatField(blank=True, null=True)
     grade = models.FloatField(blank=True, null=True)
     #    can_drop            tinyint(1) not null,
+    gpa = models.FloatField(blank=True, null=True)
     can_drop = models.IntegerField(blank=True, null=True)
 
 
