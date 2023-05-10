@@ -1,20 +1,20 @@
-from django.contrib.auth import get_user_model
-from rest_framework import generics, viewsets, status, serializers
-from rest_framework.permissions import IsAdminUser
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
 from dashboard.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
 from dashboard.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher, IsAdminOrTeacherOrReadOnly
-from dashboard.serializers.myclass import ClassSerializer
 from dashboard.serializers.course import CourseSerializer
+from dashboard.serializers.courseSelection import CourseSelectionSerializer
 from dashboard.serializers.department import DepartmentSerializer
 from dashboard.serializers.major import MajorSerializer
+from dashboard.serializers.myclass import ClassSerializer
 from dashboard.serializers.semester import SemesterSerializer
 from dashboard.serializers.student import StudentSerializer
 from dashboard.serializers.teacher import TeacherSerializer
 from dashboard.serializers.user import UserSerializer
-from dashboard.serializers.courseSelection import CourseSelectionSerializer
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, status, serializers
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
+
 
 # Create your views here.
 
@@ -27,7 +27,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(self.request.data)
         print(self.request.user.id)
-        #如果学生id和课程id在数据库中都存在，那么就不用再传了
+        # 如果学生id和课程id在数据库中都存在，那么就不用再传了
         student = Student.objects.get(user_id=self.request.user.id)
         if CourseSelection.objects.filter(student_id=student, class_id=self.request.data['class_id']).exists():
             print("已经存在");
@@ -54,6 +54,8 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return CourseSelection.objects.all()
         else:
             return CourseSelection.objects.filter(student_id=self.request.user.id)
+
+
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
@@ -110,6 +112,34 @@ class StudentViewSet(viewsets.ModelViewSet):
         instance.user.delete()
         instance.delete()
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Teacher.objects.all()
+        elif self.request.user.is_staff:
+            return Teacher.objects.filter(user_id=self.request.user.id)
+
+    def list(self, request, *args, **kwargs):
+        """
+            检索在教师所教课程中注册过的学生名单。
+
+            参数：
+            -----------
+            request: HttpRequest
+                发送给该视图的HTTP请求。
+
+            返回值:
+            --------
+            Response:
+                一个响应对象，包含一个序列化的学生对象的列表，这些学生对象已经注册了教师教授的课程。
+        """
+        teacher_id = self.kwargs.get('teacher_id')
+        teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
+        courses = Course.objects.filter(teacher=teacher)
+        course_selections = CourseSelection.objects.filter(course__in=courses)
+        students = Student.objects.filter(student_id__in=course_selections.values('student_id'))
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
@@ -132,11 +162,13 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'username'
     permission_classes = [IsSelfOrAdmin]
+
     def get_queryset(self):
         if self.request.user.is_superuser or self.request.user.is_staff:
             return User.objects.all()
         else:
             return User.objects.filter(id=self.request.user.id)
+
     def get_permissions(self):
         if self.request.method == 'PUT' or self.request.method == 'GET':
             self.permission_classes = [IsSelfOrAdmin]
