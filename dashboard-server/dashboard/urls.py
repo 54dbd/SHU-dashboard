@@ -34,10 +34,12 @@ router.register(r'student', views.StudentViewSet)
 router.register(r'teacher', views.TeacherViewSet)
 router.register(r'user', views.UserViewSet)
 router.register(r'course-selection', views.CourseSelectionViewSet)
+
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('v1/', include(router.urls)),
     path('v1/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('v1/teacherCourseSelection/<str:teacher_id>/', views.TeacherCourseSelectionListView.as_view()),
 ]

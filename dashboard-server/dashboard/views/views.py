@@ -1,3 +1,5 @@
+from rest_framework.decorators import action
+
 from dashboard.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
 from dashboard.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher, IsAdminOrTeacherOrReadOnly
 from dashboard.serializers.course import CourseSerializer
@@ -11,7 +13,7 @@ from dashboard.serializers.teacher import TeacherSerializer
 from dashboard.serializers.user import UserSerializer
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, serializers
+from rest_framework import viewsets, status, serializers, generics
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -54,6 +56,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return CourseSelection.objects.all()
         else:
             return CourseSelection.objects.filter(student_id=self.request.user.id)
+
 
 
 class ClassViewSet(viewsets.ModelViewSet):
@@ -100,7 +103,6 @@ class StudentViewSet(viewsets.ModelViewSet):
             return Student.objects.all()
         else:
             # 否则，只允许当前用户查看自己的信息
-            # print(self.request.user.id, "trying to check own info")
             return Student.objects.filter(user_id=self.request.user.id)
 
     def perform_create(self, serializer):
@@ -111,34 +113,6 @@ class StudentViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         instance.user.delete()
         instance.delete()
-
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Teacher.objects.all()
-        elif self.request.user.is_staff:
-            return Teacher.objects.filter(user_id=self.request.user.id)
-
-    def list(self, request, *args, **kwargs):
-        """
-            检索在教师所教课程中注册过的学生名单。
-
-            参数：
-            -----------
-            request: HttpRequest
-                发送给该视图的HTTP请求。
-
-            返回值:
-            --------
-            Response:
-                一个响应对象，包含一个序列化的学生对象的列表，这些学生对象已经注册了教师教授的课程。
-        """
-        teacher_id = self.kwargs.get('teacher_id')
-        teacher = get_object_or_404(Teacher, teacher_id=teacher_id)
-        courses = Course.objects.filter(teacher=teacher)
-        course_selections = CourseSelection.objects.filter(course__in=courses)
-        students = Student.objects.filter(student_id__in=course_selections.values('student_id'))
-        serializer = StudentSerializer(students, many=True)
-        return Response(serializer.data)
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
@@ -155,6 +129,13 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         instance.user.delete()
         instance.delete()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Teacher.objects.all()
+        elif self.request.user.is_staff:
+            return Teacher.objects.filter(user_id=self.request.user.id)
+
 
  
 class UserViewSet(viewsets.ModelViewSet):
@@ -176,3 +157,10 @@ class UserViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser]
 
         return super().get_permissions()
+class TeacherCourseSelectionListView(generics.ListAPIView):
+    serializer_class = CourseSelectionSerializer
+
+    def get_queryset(self):
+        teacher_id = self.kwargs['teacher_id']
+        course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_id)
+        return course_selections
