@@ -51,6 +51,13 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         course_selection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
     def get_queryset(self):
         if self.request.user.is_superuser or self.request.user.is_staff:
             return CourseSelection.objects.all()
