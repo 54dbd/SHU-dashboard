@@ -71,6 +71,8 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    # TODO:CRUD
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -84,6 +86,8 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    # TODO:CRUD
 
 
 class MajorViewSet(viewsets.ModelViewSet):
@@ -168,6 +172,19 @@ class TeacherCourseSelectionListView(generics.ListAPIView):
     serializer_class = CourseSelectionSerializer
 
     def get_queryset(self):
-        teacher_id = self.kwargs['teacher_id']
-        course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_id)
-        return course_selections
+        id = self.kwargs['teacher_id']
+
+        if len(id) is 2:
+            course_selections = CourseSelection.objects.filter(class_id__teacher_id=id)
+            return course_selections
+        elif len(id) is 4:
+            username = id
+            teacher_user = User.objects.get(username=username)
+            course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_user.id)
+            return course_selections
+        else:
+            raise f"f{len(id)} is not valid!"
+           
+    
+
+    # TODO: perform_update
