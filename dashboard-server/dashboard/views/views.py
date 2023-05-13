@@ -19,7 +19,6 @@ from rest_framework.response import Response
 
 
 # Create your views here.
-
 class CourseSelectionViewSet(viewsets.ModelViewSet):
     queryset = CourseSelection.objects.all()
     serializer_class = CourseSelectionSerializer
@@ -27,8 +26,6 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsSelfOrAdmin]
 
     def perform_create(self, serializer):
-        print(self.request.data)
-        print(self.request.user.id)
         # 如果学生id和课程id在数据库中都存在，那么就不用再传了
         student = Student.objects.get(user_id=self.request.user.id)
         if CourseSelection.objects.filter(student_id=student, class_id=self.request.data['class_id']).exists():
@@ -38,6 +35,17 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, instance):
         instance.delete()
+
+    # 只有教师和管理员可以修改成绩
+    # 实现请求方式为PATCH，即局部更新
+    def partial_update(self, request, *args, **kwargs):
+        student = Student.objects.get(user_id=self.request.data['student_id'])
+        course_selection = CourseSelection.objects.get(student_id=student, class_id=self.request.data['class_id'])
+        # 修改成绩
+        course_selection.gp = self.request.data['gp']
+        course_selection.exam = self.request.data['exam']
+        course_selection.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, *args, **kwargs):
         print(self.request.data)
@@ -58,7 +66,6 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return CourseSelection.objects.filter(student_id=self.request.user.id)
 
 
-
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
@@ -71,6 +78,10 @@ class CourseViewSet(viewsets.ModelViewSet):
     serializer_class = CourseSerializer
     lookup_field = 'course_id'
     permission_classes = [IsAdminUserOrReadOnly]
+
+    def perform_create(self, serializer):
+        dept_id = self.request.data.get('dept_id')
+        serializer.save(dept_id=dept_id)
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -137,7 +148,6 @@ class TeacherViewSet(viewsets.ModelViewSet):
             return Teacher.objects.filter(user_id=self.request.user.id)
 
 
- 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -157,6 +167,8 @@ class UserViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser]
 
         return super().get_permissions()
+
+
 class TeacherCourseSelectionListView(generics.ListAPIView):
     serializer_class = CourseSelectionSerializer
 
