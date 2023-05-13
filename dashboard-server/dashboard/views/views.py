@@ -59,6 +59,13 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         course_selection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
     def get_queryset(self):
         if self.request.user.is_superuser or self.request.user.is_staff:
             return CourseSelection.objects.all()
@@ -71,6 +78,8 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    # TODO:CRUD
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -88,6 +97,8 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
+    
+    # TODO:CRUD
 
 
 class MajorViewSet(viewsets.ModelViewSet):
@@ -173,6 +184,19 @@ class TeacherCourseSelectionListView(generics.ListAPIView):
     serializer_class = CourseSelectionSerializer
 
     def get_queryset(self):
-        teacher_id = self.kwargs['teacher_id']
-        course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_id)
-        return course_selections
+        id = self.kwargs['teacher_id']
+
+        if len(id) is 2:
+            course_selections = CourseSelection.objects.filter(class_id__teacher_id=id)
+            return course_selections
+        elif len(id) is 4:
+            username = id
+            teacher_user = User.objects.get(username=username)
+            course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_user.id)
+            return course_selections
+        else:
+            raise f"f{len(id)} is not valid!"
+           
+    
+
+    # TODO: perform_update

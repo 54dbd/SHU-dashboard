@@ -60,7 +60,6 @@ function Basic() {
             localStorage.setItem("token", data.access);
             localStorage.setItem("id", username);
           });
-
           // 跳转到首页
           window.location.href = "/";
         } else {

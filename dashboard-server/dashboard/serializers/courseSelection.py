@@ -16,6 +16,7 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
             'student_id',
             'grade',
             'gp',
+            'gpa',
             'exam',
         ]
 

@@ -64,17 +64,21 @@ export default function App() {
     api
       .get(`/user/${id}`)
       .then((response) => {
+        let name;
         if (!response.data.student && !response.data.teacher) {
           setUsername(response.data.username);
+          name = response.data.username;
           setSidenavColor(dispatch, "error");
         } else if (response.data.student) {
-          setSidenavColor(dispatch, "info");
           setUsername(response.data.student.name);
+          name = response.data.student.name;
+          setSidenavColor(dispatch, "info");
         } else if (response.data.teacher) {
           setUsername(response.data.teacher.name);
+          name = response.data.teacher.name;
           setSidenavColor(dispatch, "success");
         }
-        localStorage.setItem("username", response.data.name);
+        localStorage.setItem("username", name);
         localStorage.setItem("UserPermission", response.data.permissions);
       })
       .catch((error) => {
