@@ -36,7 +36,6 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         instance.delete()
 
-
     def delete(self, request, *args, **kwargs):
         print(self.request.data)
         print(self.request.user.id)
@@ -57,10 +56,27 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def get_queryset(self):
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return CourseSelection.objects.all()
+        semester_id = self.request.query_params.get('semester_id', None)
+        class_id = self.request.query_params.get('class_id', None)
+        # 获取符合条件的 CourseSelection 对象
+        if semester_id is not None:
+            queryset = CourseSelection.objects.filter(class_id__semester_id=semester_id)
         else:
-            return CourseSelection.objects.filter(student_id=self.request.user.id)
+            queryset = CourseSelection.objects.all()
+        # 添加额外的过滤条件
+        if class_id is not None:
+            queryset = queryset.filter(class_id=class_id)
+        # 根据用户角色返回不同的数据
+        if self.request.user.is_superuser:
+            return queryset.all()
+        elif self.request.user.is_staff:
+            if class_id is None:
+                teacher = Teacher.objects.get(user_id_id=self.request.user.id)
+                return queryset.filter(class_id__teacher_id=teacher)
+            elif queryset.filter(class_id=class_id, class_id__teacher_id__user_id=self.request.user.id).exists():
+                return queryset.filter(class_id=class_id)
+        else:
+            return queryset.filter(student_id=self.request.user.id)
 
 
 class ClassViewSet(viewsets.ModelViewSet):
@@ -70,6 +86,7 @@ class ClassViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
     allowed_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE']
     http_method_names = ['put', 'get', 'delete', 'post', 'patch']
+
     # TODO:CRUD
 
     # 创建新课程
@@ -138,6 +155,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         else:
             return Course.objects.filter(dept_id=self.request.user.dept_id)
 
+
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
@@ -177,6 +195,7 @@ class DepartmentViewSet(viewsets.ModelViewSet):
             return Department.objects.all()
         else:
             return Department.objects.filter(teacher_id=self.request.user.id)
+
 
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all()
