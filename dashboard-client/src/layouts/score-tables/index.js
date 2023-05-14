@@ -30,18 +30,30 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import "animate.css/animate.min.css";
 import selectedCourseTableData from "layouts/tables/data/selectedCourseTableData";
-import allCourseTableData from "layouts/tables/data/allCourseTableData";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { cssTransition, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { Collapse, ListItemButton } from "@mui/material";
+import List from "@mui/material/List";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import ListItemText from "@mui/material/ListItemText";
 // import MDButton from "../../components/MDButton";
+
 // import MDAlert from "../../components/MDAlert";
 function ScoreTables() {
-  // eslint-disable-next-line prefer-const
-  const { columns: pColumns, rows: pRows, results: pResults } = allCourseTableData();
-  // eslint-disable-next-line prefer-const
+  const [openCourseMenu, setOpenCourseMenu] = useState(false);
+  const [openSemesterMenu, setOpenSemesterMenu] = useState(false);
+
   const { columns: sColumns, rows: sRows, results: sResults } = selectedCourseTableData();
+  const handleCourseClick = () => {
+    setOpenCourseMenu(!openCourseMenu);
+  };
+  const handleSemesterClick = () => {
+    setOpenSemesterMenu(!openSemesterMenu);
+  };
+
   const bounce = cssTransition({
     enter: "animate__animated animate__bounceIn",
     exit: "animate__animated animate__bounceOut",
@@ -74,14 +86,6 @@ function ScoreTables() {
       // onClose: () => setShowToast(false),
     });
   }
-  console.log(pRows);
-  useEffect(() => {
-    if (pResults.code === 200) {
-      handleSuccess(pResults.content);
-    } else if (pResults.code === 404) {
-      handleError(pResults.content);
-    }
-  }, [pResults]);
   useEffect(() => {
     if (sResults.code === 200) {
       handleSuccess(sResults.content);
@@ -89,13 +93,57 @@ function ScoreTables() {
       handleError(sResults.content);
     }
   }, [sResults]);
-
-  // sRows或者sColumns改变时，会触发useEffect，刷新页面内容
-  // useEffect(() => {
-  //   const { columns: tempColumns, rows: tempRows } = selectedCourseTableData();
-  //   setSColumns(tempColumns);
-  //   setSRows(tempRows);
-  // }, [sResults]);
+  const classList = [
+    { id: 1, title: "Class 1" },
+    { id: 2, title: "Class 2" },
+    { id: 3, title: "Class 3" },
+  ];
+  const handleChoose = (event) => {
+    console.log(event.currentTarget);
+  };
+  const NotificationList = classList.map((item) => (
+    <List component="div" disablePadding>
+      <ListItemButton sx={{ pl: 4 }}>
+        <ListItemIcon>
+          <StarBorder />
+        </ListItemIcon>
+        <ListItemText
+          primary={item.title}
+          key={item.id}
+          onClick={handleChoose}
+          style={{ color: "white" }}
+        />
+      </ListItemButton>
+    </List>
+  ));
+  const renderCourseMenu = () => (
+    <div>
+      <ListItemButton onClick={handleCourseClick}>
+        <ListItemIcon>
+          <InboxIcon fontSize="large" style={{ color: "white" }} />
+        </ListItemIcon>
+        <ListItemText primary="课程" style={{ color: "white" }} />
+        {openCourseMenu ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={openCourseMenu} timeout="auto" unmountOnExit>
+        {NotificationList}
+      </Collapse>
+    </div>
+  );
+  const renderSemesterMenu = () => (
+    <div>
+      <ListItemButton onClick={handleSemesterClick}>
+        <ListItemIcon>
+          <InboxIcon fontSize="large" style={{ color: "white" }} />
+        </ListItemIcon>
+        <ListItemText primary="学期" style={{ color: "white" }} />
+        {openSemesterMenu ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={openSemesterMenu} timeout="auto" unmountOnExit>
+        {NotificationList}
+      </Collapse>
+    </div>
+  );
 
   return (
     <DashboardLayout>
@@ -122,44 +170,19 @@ function ScoreTables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="success"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="success"
               >
                 <MDTypography variant="h4" color="white">
                   已选课程
                 </MDTypography>
+                {renderCourseMenu()}
+                {renderSemesterMenu()}
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns: sColumns.valueOf(), rows: sRows.valueOf() }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h4" color="white">
-                  可选课程
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns.valueOf(), rows: pRows.valueOf() }}
                   isSorted={false}
                   entriesPerPage={false}
                   showTotalEntries={false}

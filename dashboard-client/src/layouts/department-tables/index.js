@@ -122,9 +122,9 @@ function DepartmentTables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="error"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="error"
               >
                 <MDTypography variant="h4" color="white">
                   已选课程
@@ -149,9 +149,9 @@ function DepartmentTables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="error"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="error"
               >
                 <MDTypography variant="h4" color="white">
                   可选课程
