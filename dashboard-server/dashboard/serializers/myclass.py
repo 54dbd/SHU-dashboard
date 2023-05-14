@@ -28,11 +28,12 @@ class ClassSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     def create(self, validated_data):
-        course_id = self.initial_data.get('course_id', None)
-        semester_id = self.initial_data.get('semester_id', None)
-        teacher_id = self.initial_data.get('teacher_id', None)
+        course_id = validated_data.get('course_id', None)
+        semester_id = validated_data.get('semester_id', None)
+        teacher_id = validated_data.get('teacher_id', None)
+        class_id = validated_data.get('class_id', None)
         course = Course.objects.get(pk=course_id)
         semester = Semester.objects.get(pk=semester_id)
         teacher = Teacher.objects.get(teacher_id=teacher_id)
-        validated_data.update(course_id=course, semaster_id=semester, teacher_id=teacher)
+        validated_data.update(class_id=class_id, course_id=course, semester_id=semester, teacher_id=teacher)
         return super(ClassSerializer, self).create(validated_data)

@@ -1,4 +1,4 @@
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 
 from dashboard.models import Student, User, Course, Department, Class, Teacher, Major, Semester, CourseSelection
 from dashboard.permission import IsAdminUserOrReadOnly, IsSelfOrAdmin, IsAdminOrTeacher, IsAdminOrTeacherOrReadOnly
@@ -36,16 +36,6 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         instance.delete()
 
-    # 只有教师和管理员可以修改成绩
-    # 实现请求方式为PATCH，即局部更新
-    def partial_update(self, request, *args, **kwargs):
-        student = Student.objects.get(user_id=self.request.data['student_id'])
-        course_selection = CourseSelection.objects.get(student_id=student, class_id=self.request.data['class_id'])
-        # 修改成绩
-        course_selection.gp = self.request.data['gp']
-        course_selection.exam = self.request.data['exam']
-        course_selection.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request, *args, **kwargs):
         print(self.request.data)
@@ -78,8 +68,43 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
-    
+    allowed_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE']
+    http_method_names = ['put', 'get', 'delete', 'post', 'patch']
     # TODO:CRUD
+
+    # 创建新课程
+    def perform_create(self, serializer):
+        # 主动设置class_id
+        class_id = self.request.data.get('class_id')
+        teacher_id = self.request.data.get('teacher_id')
+        semester_id = self.request.data.get('semester_id')
+        course_id = self.request.data.get('course_id')
+        serializer.save(class_id=class_id, course_id=course_id, semester_id=semester_id, teacher_id=teacher_id)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # 修改课程信息
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    # 删除课程
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 如果课程已经有学生选了，就不能删除
+        if instance.current_selection != 0:
+            raise serializers.ValidationError({'class_id': '该课程已经有学生选了，不能删除'})
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # 课程查询
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return Class.objects.all()
+        else:
+            return Class.objects.filter(teacher_id=self.request.user.id)
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -92,14 +117,66 @@ class CourseViewSet(viewsets.ModelViewSet):
         dept_id = self.request.data.get('dept_id')
         serializer.save(dept_id=dept_id)
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 如果课程已经有学生选了，就不能删除
+        if instance.current_selection != 0:
+            raise serializers.ValidationError({'course_id': '该课程已经有学生选了，不能删除'})
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return Course.objects.all()
+        else:
+            return Course.objects.filter(dept_id=self.request.user.dept_id)
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.all()
     serializer_class = DepartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
-    
-    # TODO:CRUD
 
+    # TODO:CRUD
+    # 创建新系
+    def perform_create(self, serializer):
+        # 主动设置dept_id
+        dept_id = self.request.data.get('dept_id')
+        serializer.save(dept_id=dept_id)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # 修改系信息
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 如果系已经有学生了，就不能修改
+        if instance.current_student != 0:
+            raise serializers.ValidationError({'dept_id': '该系已经有学生了，不能修改'})
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    # 删除系
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # 如果系已经有学生了，就不能删除
+        if instance.current_student != 0:
+            raise serializers.ValidationError({'dept_id': '该系已经有学生了，不能删除'})
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # 系查询
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return Department.objects.all()
+        else:
+            return Department.objects.filter(teacher_id=self.request.user.id)
 
 class MajorViewSet(viewsets.ModelViewSet):
     queryset = Major.objects.all()
@@ -196,7 +273,5 @@ class TeacherCourseSelectionListView(generics.ListAPIView):
             return course_selections
         else:
             raise f"f{len(id)} is not valid!"
-           
-    
 
     # TODO: perform_update
