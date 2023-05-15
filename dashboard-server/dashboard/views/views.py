@@ -84,10 +84,6 @@ class ClassViewSet(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     lookup_field = 'class_id'
     permission_classes = [IsAdminUserOrReadOnly]
-    allowed_methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE']
-    http_method_names = ['put', 'get', 'delete', 'post', 'patch']
-
-    # TODO:CRUD
 
     # 创建新课程
     def perform_create(self, serializer):
@@ -118,9 +114,9 @@ class ClassViewSet(viewsets.ModelViewSet):
 
     # 课程查询
     def get_queryset(self):
-        if self.request.user.is_superuser or self.request.user.is_staff:
+        if self.request.user.is_superuser:
             return Class.objects.all()
-        else:
+        elif self.request.user.is_staff:
             return Class.objects.filter(teacher_id=self.request.user.id)
 
 
@@ -254,6 +250,20 @@ class TeacherViewSet(viewsets.ModelViewSet):
         elif self.request.user.is_staff:
             return Teacher.objects.filter(user_id=self.request.user.id)
 
+    @action(detail=True, methods=['get'])
+    def courses(self, request, *args, **kwargs):
+        teacher = self.get_object()
+        teacher = Teacher.objects.get(user_id=teacher.user_id)
+        courses = Class.objects.filter(teacher_id_id=teacher).values('course_id_id').distinct()
+        return Response(courses)
+
+    @action(detail=True, methods=['get'])
+    def semesters(self, request, *args, **kwargs):
+        teacher = self.get_object()
+        teacher = Teacher.objects.get(user_id=teacher.user_id)
+        semesters = Class.objects.filter(teacher_id_id=teacher).values('semester_id_id').distinct()
+        return Response(semesters)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -274,23 +284,3 @@ class UserViewSet(viewsets.ModelViewSet):
             self.permission_classes = [IsAdminUser]
 
         return super().get_permissions()
-
-
-class TeacherCourseSelectionListView(generics.ListAPIView):
-    serializer_class = CourseSelectionSerializer
-
-    def get_queryset(self):
-        id = self.kwargs['teacher_id']
-
-        if len(id) is 2:
-            course_selections = CourseSelection.objects.filter(class_id__teacher_id=id)
-            return course_selections
-        elif len(id) is 4:
-            username = id
-            teacher_user = User.objects.get(username=username)
-            course_selections = CourseSelection.objects.filter(class_id__teacher_id=teacher_user.id)
-            return course_selections
-        else:
-            raise f"f{len(id)} is not valid!"
-
-    # TODO: perform_update
