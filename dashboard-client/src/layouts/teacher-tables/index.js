@@ -30,7 +30,6 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import "animate.css/animate.min.css";
 import selectedCourseTableData from "layouts/tables/data/selectedCourseTableData";
-import allCourseTableData from "layouts/tables/data/allCourseTableData";
 import { useEffect } from "react";
 import { cssTransition, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,8 +37,6 @@ import "react-toastify/dist/ReactToastify.css";
 // import MDButton from "../../components/MDButton";
 // import MDAlert from "../../components/MDAlert";
 function TeacherTables() {
-  // eslint-disable-next-line prefer-const
-  const { columns: pColumns, rows: pRows, results: pResults } = allCourseTableData();
   // eslint-disable-next-line prefer-const
   const { columns: sColumns, rows: sRows, results: sResults } = selectedCourseTableData();
   const bounce = cssTransition({
@@ -74,14 +71,7 @@ function TeacherTables() {
       // onClose: () => setShowToast(false),
     });
   }
-  console.log(pRows);
-  useEffect(() => {
-    if (pResults.code === 200) {
-      handleSuccess(pResults.content);
-    } else if (pResults.code === 404) {
-      handleError(pResults.content);
-    }
-  }, [pResults]);
+
   useEffect(() => {
     if (sResults.code === 200) {
       handleSuccess(sResults.content);
@@ -122,44 +112,17 @@ function TeacherTables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="error"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="error"
               >
                 <MDTypography variant="h4" color="white">
-                  已选课程
+                  成绩修改
                 </MDTypography>
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns: sColumns.valueOf(), rows: sRows.valueOf() }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
-            </Card>
-          </Grid>
-          <Grid item xs={12}>
-            <Card>
-              <MDBox
-                mx={2}
-                mt={-3}
-                py={3}
-                px={2}
-                variant="gradient"
-                bgColor="info"
-                borderRadius="lg"
-                coloredShadow="info"
-              >
-                <MDTypography variant="h4" color="white">
-                  可选课程
-                </MDTypography>
-              </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: pColumns.valueOf(), rows: pRows.valueOf() }}
                   isSorted={false}
                   entriesPerPage={false}
                   showTotalEntries={false}
