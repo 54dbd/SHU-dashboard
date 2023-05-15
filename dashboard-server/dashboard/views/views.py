@@ -57,24 +57,24 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         semester_id = self.request.query_params.get('semester_id', None)
-        class_id = self.request.query_params.get('class_id', None)
+        course_id = self.request.query_params.get('course_id', None)
         # 获取符合条件的 CourseSelection 对象
         if semester_id is not None:
             queryset = CourseSelection.objects.filter(class_id__semester_id=semester_id)
         else:
             queryset = CourseSelection.objects.all()
         # 添加额外的过滤条件
-        if class_id is not None:
-            queryset = queryset.filter(class_id=class_id)
+        if course_id is not None:
+            queryset = queryset.filter(class_id__course_id=course_id)
         # 根据用户角色返回不同的数据
         if self.request.user.is_superuser:
             return queryset.all()
         elif self.request.user.is_staff:
-            if class_id is None:
+            if course_id is None:
                 teacher = Teacher.objects.get(user_id_id=self.request.user.id)
                 return queryset.filter(class_id__teacher_id=teacher)
-            elif queryset.filter(class_id=class_id, class_id__teacher_id__user_id=self.request.user.id).exists():
-                return queryset.filter(class_id=class_id)
+            elif queryset.filter(class_id__course_id=course_id, class_id__teacher_id__user_id=self.request.user.id).exists():
+                return queryset.filter(class_id__course_id=course_id)
         else:
             return queryset.filter(student_id=self.request.user.id)
 
@@ -253,14 +253,15 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def courses(self, request, *args, **kwargs):
         teacher = self.get_object()
         teacher = Teacher.objects.get(user_id=teacher.user_id)
-        courses = Class.objects.filter(teacher_id_id=teacher).values('course_id_id').distinct()
+
+        courses = Class.objects.filter(teacher_id_id=teacher).values('course_id_id', 'course_id__name').distinct()
         return Response(courses)
 
     @action(detail=True, methods=['get'])
     def semesters(self, request, *args, **kwargs):
         teacher = self.get_object()
         teacher = Teacher.objects.get(user_id=teacher.user_id)
-        semesters = Class.objects.filter(teacher_id_id=teacher).values('semester_id_id').distinct()
+        semesters = Class.objects.filter(teacher_id_id=teacher).values('semester_id_id', 'semester_id__name').distinct()
         return Response(semesters)
 
 

@@ -12,6 +12,7 @@ class CourseSelectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CourseSelection
         fields = [
+            'course_selection_id',
             'class_id',
             'student_id',
             'grade',

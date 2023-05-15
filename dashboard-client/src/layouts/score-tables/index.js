@@ -25,28 +25,33 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import DataTable from "examples/Tables/DataTable";
 
 // Data
 import "animate.css/animate.min.css";
-import selectedCourseTableData from "layouts/tables/data/selectedCourseTableData";
 import { useEffect, useState } from "react";
-import { cssTransition, toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Collapse, ListItemButton } from "@mui/material";
 import List from "@mui/material/List";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import ClassIcon from "@mui/icons-material/Class";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import ListItemText from "@mui/material/ListItemText";
+import axios from "axios";
+import selectedCourseTableData from "./data/selectedCourseTableData";
 // import MDButton from "../../components/MDButton";
 
 // import MDAlert from "../../components/MDAlert";
 function ScoreTables() {
   const [openCourseMenu, setOpenCourseMenu] = useState(false);
   const [openSemesterMenu, setOpenSemesterMenu] = useState(false);
-
-  const { columns: sColumns, rows: sRows, results: sResults } = selectedCourseTableData();
+  const [courseFilter, setCourseFilter] = useState("");
+  const [courseNameFilter, setCourseNameFilter] = useState("");
+  const [semesterFilter, setSemesterFilter] = useState("");
+  const [semesterNameFilter, setSemesterNameFilter] = useState("");
+  const [courses, setCourses] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const teacherID = localStorage.getItem("id");
   const handleCourseClick = () => {
     setOpenCourseMenu(!openCourseMenu);
   };
@@ -54,63 +59,56 @@ function ScoreTables() {
     setOpenSemesterMenu(!openSemesterMenu);
   };
 
-  const bounce = cssTransition({
-    enter: "animate__animated animate__bounceIn",
-    exit: "animate__animated animate__bounceOut",
+  const api = axios.create({
+    baseURL: `http://localhost:8000/v1/`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer  ${localStorage.getItem("token")}`,
+    },
   });
-  function handleSuccess(content) {
-    toast.success(content, {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: bounce,
-      // onClose: () => setShowToast(false),
-    });
-  }
-  function handleError(content) {
-    toast.error(content, {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: bounce,
-      // onClose: () => setShowToast(false),
-    });
-  }
   useEffect(() => {
-    if (sResults.code === 200) {
-      handleSuccess(sResults.content);
-    } else if (sResults.code === 404) {
-      handleError(sResults.content);
-    }
-  }, [sResults]);
-  const classList = [
-    { id: 1, title: "Class 1" },
-    { id: 2, title: "Class 2" },
-    { id: 3, title: "Class 3" },
-  ];
-  const handleChoose = (event) => {
-    console.log(event.currentTarget);
+    api.get(`/teacher/${teacherID}/courses/`).then((response) => {
+      // 往course最前面加一个all
+      response.data.unshift({ course_id__name: "", course_id_id: "" });
+      setCourses(response.data);
+    });
+    api.get(`/teacher/${teacherID}/semesters/`).then((response) => {
+      response.data.unshift({ course_id__name: "", course_id_id: "" });
+      setSemesters(response.data);
+    });
+  }, [teacherID]);
+
+  const handleChooseSemester = (event) => {
+    setSemesterNameFilter(event.currentTarget.getAttribute("name"));
+    setSemesterFilter(event.currentTarget.getAttribute("id"));
   };
-  const NotificationList = classList.map((item) => (
+  const handleChooseCourse = (event) => {
+    setCourseNameFilter(event.currentTarget.getAttribute("name"));
+    setCourseFilter(event.currentTarget.getAttribute("id"));
+  };
+  const CourseNotificationList = courses.map((item) => (
     <List component="div" disablePadding>
       <ListItemButton sx={{ pl: 4 }}>
-        <ListItemIcon>
-          <StarBorder />
-        </ListItemIcon>
         <ListItemText
-          primary={item.title}
-          key={item.id}
-          onClick={handleChoose}
+          primary={item.course_id__name || "全部"}
+          key={item.course_id_id || "0"}
+          id={item.course_id_id || ""}
+          name={item.course_id__name || "全部"}
+          onClick={handleChooseCourse}
+          style={{ color: "white" }}
+        />
+      </ListItemButton>
+    </List>
+  ));
+  const SemesterNotificationList = semesters.map((item) => (
+    <List component="div" disablePadding>
+      <ListItemButton sx={{ pl: 4 }}>
+        <ListItemText
+          primary={item.semester_id__name || "全部"}
+          key={item.semester_id_id || "0"}
+          id={item.semester_id_id || ""}
+          name={item.semester_id__name || "全部"}
+          onClick={handleChooseSemester}
           style={{ color: "white" }}
         />
       </ListItemButton>
@@ -120,13 +118,13 @@ function ScoreTables() {
     <div>
       <ListItemButton onClick={handleCourseClick}>
         <ListItemIcon>
-          <InboxIcon fontSize="large" style={{ color: "white" }} />
+          <ClassIcon fontSize="large" style={{ color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="课程" style={{ color: "white" }} />
         {openCourseMenu ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openCourseMenu} timeout="auto" unmountOnExit>
-        {NotificationList}
+        {CourseNotificationList}
       </Collapse>
     </div>
   );
@@ -134,13 +132,13 @@ function ScoreTables() {
     <div>
       <ListItemButton onClick={handleSemesterClick}>
         <ListItemIcon>
-          <InboxIcon fontSize="large" style={{ color: "white" }} />
+          <AccessTimeFilledIcon fontSize="large" style={{ color: "white" }} />
         </ListItemIcon>
         <ListItemText primary="学期" style={{ color: "white" }} />
         {openSemesterMenu ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse in={openSemesterMenu} timeout="auto" unmountOnExit>
-        {NotificationList}
+        {SemesterNotificationList}
       </Collapse>
     </div>
   );
@@ -148,18 +146,7 @@ function ScoreTables() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+
       <MDBox pt={6} pb={3}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
@@ -174,21 +161,24 @@ function ScoreTables() {
                 borderRadius="lg"
                 coloredShadow="success"
               >
-                <MDTypography variant="h4" color="white">
-                  已选课程
+                <MDTypography variant="h2" color="white">
+                  成绩表
+                </MDTypography>
+                <MDTypography variant="h6" color="white" opacity={0.8}>
+                  {semesterNameFilter ? `学期：${semesterNameFilter}` : "全部学期"}
+                </MDTypography>
+                <MDTypography variant="h6" color="white" opacity={0.8}>
+                  {semesterNameFilter ? `课程：${courseNameFilter}` : "全部课程 "}
                 </MDTypography>
                 {renderCourseMenu()}
                 {renderSemesterMenu()}
               </MDBox>
-              <MDBox pt={3}>
-                <DataTable
-                  table={{ columns: sColumns.valueOf(), rows: sRows.valueOf() }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
-                  noEndBorder
-                />
-              </MDBox>
+              {selectedCourseTableData(
+                courseFilter,
+                semesterFilter,
+                courseNameFilter,
+                semesterNameFilter
+              )}
             </Card>
           </Grid>
         </Grid>
