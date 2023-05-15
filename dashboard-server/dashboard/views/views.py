@@ -116,7 +116,7 @@ class ClassViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Class.objects.all()
-        elif self.request.user.is_staff:
+        else:
             return Class.objects.filter(teacher_id=self.request.user.id)
 
 
@@ -157,7 +157,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     serializer_class = DepartmentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
-    # TODO:CRUD
     # 创建新系
     def perform_create(self, serializer):
         # 主动设置dept_id
