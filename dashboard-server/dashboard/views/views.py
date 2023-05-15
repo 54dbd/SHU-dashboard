@@ -23,7 +23,6 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
     queryset = CourseSelection.objects.all()
     serializer_class = CourseSelectionSerializer
     lookup_field = 'course_selection_id'
-    permission_classes = [IsSelfOrAdmin]
 
     def perform_create(self, serializer):
         # 如果学生id和课程id在数据库中都存在，那么就不用再传了
@@ -43,17 +42,17 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         # 如果这个同学这门课已经有成绩，就不能删除
         if CourseSelection.objects.get(student_id=student, class_id=self.request.data['class_id']).grade is not None:
             raise serializers.ValidationError({'class_id': '该课程有成绩'})
-
         course_selection = CourseSelection.objects.get(student_id=student, class_id=self.request.data['class_id'])
         course_selection.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
 
     def get_queryset(self):
         semester_id = self.request.query_params.get('semester_id', None)
@@ -167,9 +166,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     # 修改系信息
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        # 如果系已经有学生了，就不能修改
-        if instance.current_student != 0:
-            raise serializers.ValidationError({'dept_id': '该系已经有学生了，不能修改'})
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
