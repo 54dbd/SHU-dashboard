@@ -6,18 +6,18 @@ from dashboard.serializers.department import DepartmentSerializer
 
 
 class TeacherSerializer(serializers.HyperlinkedModelSerializer):
-    dept = DepartmentSerializer(read_only=True)
+    dept_id = DepartmentSerializer(read_only=True)
 
     class Meta:
         model = Teacher
         fields = [
             'teacher_id',
             'name',
-            'dept',
+            'dept_id',
         ]
 
     def create(self, validated_data):
         dept_id = self.initial_data.get('dept_id', None)
         dept = Department.objects.get(pk=dept_id)
-        validated_data.update(dept=dept)
+        validated_data.update(dept_id=dept)
         return super(TeacherSerializer, self).create(validated_data)

@@ -7,8 +7,8 @@ from dashboard.serializers.major import MajorSerializer
 
 
 class StudentSerializer(serializers.HyperlinkedModelSerializer):
-    dept = DepartmentSerializer(read_only=True)
-    major = MajorSerializer(read_only=True)
+    dept_id = DepartmentSerializer(read_only=True)
+    major_id = MajorSerializer(read_only=True)
 
     class Meta:
         model = Student
@@ -16,8 +16,8 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
             'student_id',
             'name',
             'gpa',
-            'dept',
-            'major',
+            'dept_id',
+            'major_id',
         ]
 
     def create(self, validated_data):
@@ -25,7 +25,7 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
         major_id = self.initial_data.get('major_id', None)
         dept = Department.objects.get(pk=dept_id)
         major = Major.objects.get(pk=major_id)
-        validated_data.update(dept=dept, major=major)
+        validated_data.update(dept_id=dept, major_id=major)
         return super(StudentSerializer, self).create(validated_data)
     def update(self, instance, validated_data):
         student_id = self.initial_data.get('student_id', None)
