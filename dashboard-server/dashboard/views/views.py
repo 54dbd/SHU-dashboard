@@ -50,9 +50,13 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         if self.request.user.is_superuser or self.request.user.is_staff:
             instance = self.get_object()
             serializer = self.get_serializer(instance, data=request.data, partial=True)
-            serializer.is_valid(raise_exception=True)
-            self.perform_update(serializer)
-            return Response(serializer.data)
+            try:
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer)
+            except serializers.ValidationError as e:
+                return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+            # 成功更新后，返回更新后的数据，状态码为200
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def get_queryset(self):
         semester_id = self.request.query_params.get('semester_id', None)

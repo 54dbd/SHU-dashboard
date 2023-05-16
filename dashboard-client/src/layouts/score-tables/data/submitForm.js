@@ -23,8 +23,9 @@ import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
+import axios from "axios";
 
-function submitForm() {
+function submitForm(id, handleClose) {
   const [exam, setExam] = useState("");
   const [gp, setGp] = useState("");
   const style = {
@@ -36,27 +37,30 @@ function submitForm() {
     boxShadow: 24,
     p: 4,
   };
-  // const navigate = useNavigate();
+  const api = axios.create({
+    baseURL: `http://localhost:8000/v1/`,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer  ${localStorage.getItem("token")}`,
+    },
+  });
+  const formData = new FormData();
+  formData.append("exam", exam);
+  formData.append("gp", gp);
   const submit = () => {
-    // 获取用户名和密码输入框的值
-
+    console.log(gp, exam);
     // 发送登录请求
-    fetch("http://localhost:8000/v1/token/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        exam,
-        gp,
-      }),
-    }).then((response) => {
-      // 处理登录响应
-      if (response.ok) {
-        // 登录成功，保存 token 到本地存储
-        console.log("Success");
-      }
-    });
+    api
+      .put(`/course-selection/${id}/`, formData)
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("Success");
+          handleClose();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <Card sx={style}>

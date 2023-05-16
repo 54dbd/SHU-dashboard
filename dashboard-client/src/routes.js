@@ -42,10 +42,9 @@ import StudentTables from "layouts/student-tables";
 import TeacherTables from "layouts/teacher-tables";
 import DepartmentTables from "layouts/department-tables";
 import CourseTables from "layouts/course-tables";
-import Billing from "layouts/billing";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
-
+import Hello from "layouts/hello";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -109,15 +108,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Billing",
-    key: "billing",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/billing",
-    component: <Billing />,
-    permission: "admin",
-  },
-  {
-    type: "collapse",
     name: "个人主页",
     key: "profile",
     icon: <Icon fontSize="small">person</Icon>,
@@ -128,10 +118,19 @@ const routes = [
   // every one
   {
     type: "collapse",
+    name: "首页",
+    key: "Hello",
+    icon: <Icon fontSize="small">home</Icon>,
+    route: "/Hello",
+    component: <Hello />,
+    permission: "any",
+  },
+  {
+    type: "collapse",
     name: "登录",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/authentication/sign-in",
+    route: "/sign-in",
     component: <SignIn />,
     permission: "any",
   },

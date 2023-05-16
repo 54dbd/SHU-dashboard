@@ -49,6 +49,7 @@ function handleError(content) {
   });
 }
 export default function data() {
+  const [id, setId] = useState(0);
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
@@ -74,7 +75,7 @@ export default function data() {
       });
   }, [studentID]);
 
-  function changeScore(student) {
+  function changeInformation(student) {
     console.log(student);
     // api
     //   .delete(`/student-selection/`, {
@@ -96,7 +97,8 @@ export default function data() {
   }
   function handleClick(student) {
     setOpen(true);
-    changeScore(student);
+    setId(student.student_id);
+    changeInformation(student);
   }
   function handleRemove(student) {
     console.log("删除课程", student);
@@ -106,6 +108,8 @@ export default function data() {
     { Header: "学号", accessor: "id", width: "25%", align: "left" },
     { Header: "姓名", accessor: "name", align: "left" },
     { Header: "GPA", accessor: "gpa", align: "left" },
+    { Header: "学院", accessor: "department", align: "left" },
+    { Header: "专业", accessor: "major", align: "left" },
     { Header: "操作", accessor: "action", align: "center" },
   ];
   const rows = students.map((student) => ({
@@ -122,6 +126,16 @@ export default function data() {
     gpa: (
       <MDTypography variant="caption" fontWeight="medium">
         {student.gpa}
+      </MDTypography>
+    ),
+    department: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {student.dept_id.name}
+      </MDTypography>
+    ),
+    major: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {student.major_id.name}
       </MDTypography>
     ),
     action: (
@@ -161,7 +175,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm()}
+        {submitForm(id, handleClose)}
       </Modal>
     );
   }

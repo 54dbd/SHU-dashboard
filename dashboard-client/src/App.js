@@ -50,6 +50,7 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [username, setUsername] = useState(null);
   const { pathname } = useLocation();
+  const [meaningLess, setMeaningLess] = useState(false);
 
   // Get the userInfo
   const id = localStorage.getItem("id");
@@ -60,6 +61,20 @@ export default function App() {
       Authorization: `Bearer  ${localStorage.getItem("token")}`,
     },
   });
+
+  const getRoutes = (allRoutes) =>
+    allRoutes.map((route) => {
+      if (route.collapse) {
+        return getRoutes(route.collapse);
+      }
+
+      if (route.route) {
+        return <Route exact path={route.route} element={route.component} key={route.key} />;
+      }
+
+      return null;
+    });
+
   useEffect(() => {
     api
       .get(`/user/${id}`)
@@ -80,6 +95,8 @@ export default function App() {
         }
         localStorage.setItem("username", name);
         localStorage.setItem("UserPermission", response.data.permissions);
+        console.log(routes);
+        setMeaningLess(true);
       })
       .catch((error) => {
         console.log(error);
@@ -112,19 +129,6 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
-
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
-
-      return null;
-    });
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
@@ -142,9 +146,9 @@ export default function App() {
         </>
       )}
       {layout === "vr" && <Configurator />}
-      <Routes>
+      <Routes id={meaningLess}>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/profile" />} />
+        <Route path="*" element={<Navigate to="/hello" />} />
       </Routes>
     </ThemeProvider>
   );

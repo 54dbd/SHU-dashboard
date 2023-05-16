@@ -68,6 +68,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
   const [courses, setCourses] = useState([]);
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
+  const [id, setId] = useState(0);
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -78,7 +79,6 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
 
   useEffect(() => {
     let url = "/course-selection/";
-
     if (courseFilter && semesterFilter) {
       url += `?course_id=${courseFilter}&semester_id=${semesterFilter}`;
     } else if (courseFilter) {
@@ -91,47 +91,29 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
       .then((response) => {
         setCourses(response.data);
         handleSuccess(`根据${courseNameFilter},${semesterNameFilter}获取课程成功!`);
-        console.log("url", url);
-        console.log(response.data);
       })
       .catch(() => {
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
         // console.log(error);
       });
-  }, [courseFilter, semesterFilter]);
+  }, [courseFilter, semesterFilter, open]);
 
-  function changeScore(course) {
-    const classId = course.class_id.class_id;
-    console.log(classId);
-    // api
-    //   .delete(`/course-selection/`, {
-    //     data: {
-    //       class_id: classId,
-    //     },
-    //   })
-    //   .then(() => {
-    //     setResult({ code: 200, content: "删除课程成功!" });
-    //     setCourses((prevCourses) =>
-    //       prevCourses.filter((prevCourse) => prevCourse.class_id !== classId)
-    //     );
-    //     // 刷新页面
-    //     // window.location.reload();
-    //   })
-    //   .catch(() => {
-    //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
-    //   });
-  }
   function handleClick(course) {
     setOpen(true);
-    changeScore(course);
+    setId(course.course_selection_id);
   }
   const handleClose = () => setOpen(false);
+  function handleSubmit() {
+    handleClose();
+  }
   const columns = [
     { Header: "学期", accessor: "semester", width: "25%", align: "left" },
     { Header: "课程名", accessor: "course_name", align: "left" },
     { Header: "课程号", accessor: "course_id", align: "left" },
-    { Header: "成绩", accessor: "score", align: "center" },
+    { Header: "平时成绩", accessor: "gp", align: "center" },
+    { Header: "考试成绩", accessor: "exam", align: "center" },
+    { Header: "总成绩", accessor: "score", align: "center" },
     { Header: "上课时间", accessor: "time", align: "center" },
     { Header: "上课教室", accessor: "classroom", align: "center" },
     { Header: "操作", accessor: "action", align: "center" },
@@ -150,6 +132,16 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
     course_id: (
       <MDTypography variant="caption" fontWeight="medium">
         {course.class_id.course_id.course_id}
+      </MDTypography>
+    ),
+    gp: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.gp || "无成绩"}
+      </MDTypography>
+    ),
+    exam: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.exam || "无成绩"}
       </MDTypography>
     ),
     score: (
@@ -188,7 +180,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm()}
+        {submitForm(id, handleSubmit)}
       </Modal>
     );
   }
