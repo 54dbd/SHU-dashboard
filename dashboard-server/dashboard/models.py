@@ -35,6 +35,9 @@ class Course(models.Model):
     gp_percentage = models.FloatField(blank=True, null=True)
     dept_id = models.ForeignKey('Department', models.DO_NOTHING, blank=True, null=True)
 
+    class Meta:
+        ordering = ['course_id']
+
 
 class CourseSelection(models.Model):
     course_selection_id = models.AutoField(primary_key=True)
@@ -48,12 +51,18 @@ class CourseSelection(models.Model):
     gpa = models.FloatField(blank=True, null=True)
     can_drop = models.IntegerField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['course_selection_id']
+
 
 class Department(models.Model):
     dept_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=9999, blank=True, null=True)
     phone = models.CharField(max_length=100, blank=True, null=True)
+
+    class Meta:
+        ordering = ['dept_id']
 
 
 class Major(models.Model):
@@ -75,7 +84,7 @@ class Student(models.Model):
     major_id = models.ForeignKey(Major, models.DO_NOTHING)
 
     class Meta:
-        ordering = ['student_id']
+        ordering = ['user_id']
 
 
 class Teacher(models.Model):
@@ -83,3 +92,6 @@ class Teacher(models.Model):
     teacher_id = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     dept_id = models.ForeignKey(Department, models.DO_NOTHING)
+
+    class Meta:
+        ordering = ['user_id']
