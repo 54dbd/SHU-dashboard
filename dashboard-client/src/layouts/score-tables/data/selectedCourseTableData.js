@@ -97,7 +97,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         handleError(result.content);
         // console.log(error);
       });
-  }, [courseFilter, semesterFilter, open]);
+  }, [courseFilter, semesterFilter, !open]);
 
   function handleClick(course) {
     setOpen(true);

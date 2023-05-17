@@ -10,15 +10,15 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-
 // Data
 import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import selectedCourseTableData from "./data/selectedCourseTableData";
+
 // import MDButton from "../../components/MDButton";
 
 // import MDAlert from "../../components/MDAlert";
-function ScoreTables() {
+function TeacherTable() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -38,7 +38,7 @@ function ScoreTables() {
                 coloredShadow="error"
               >
                 <MDTypography variant="h2" color="white">
-                  教师表
+                  教师管理
                 </MDTypography>
               </MDBox>
               {selectedCourseTableData()}
@@ -51,4 +51,4 @@ function ScoreTables() {
   );
 }
 
-export default ScoreTables;
+export default TeacherTable;

@@ -39,5 +39,5 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
             dept = Department.objects.get(pk=dept_id)
         if major_id is not None:
             major = Major.objects.get(pk=major_id)
-        validated_data.update(dept=dept, major=major)
+        validated_data.update(dept_id=dept, major_id=major)
         return super(StudentSerializer, self).update(instance, validated_data)

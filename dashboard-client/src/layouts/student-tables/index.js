@@ -10,11 +10,11 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-
 // Data
 import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import selectedCourseTableData from "./data/selectedCourseTableData";
+
 // import MDButton from "../../components/MDButton";
 
 // import MDAlert from "../../components/MDAlert";

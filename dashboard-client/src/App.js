@@ -95,7 +95,6 @@ export default function App() {
         }
         localStorage.setItem("username", name);
         localStorage.setItem("UserPermission", response.data.permissions);
-        console.log(routes);
         setMeaningLess(true);
       })
       .catch((error) => {

@@ -98,7 +98,6 @@ function submitForm(id, handleClose) {
               size="small"
               fullWidth
               helperText="考试成绩区间为(0~100)"
-              style={{ lineHeight: "100px" }}
               onChange={(event) => setExam(event.target.value)}
             />
           </MDBox>

@@ -12,9 +12,12 @@ import { Modal } from "@mui/material";
 
 import { cssTransition, toast, ToastContainer } from "react-toastify";
 import Grid from "@mui/material/Grid";
+import AddIcon from "@mui/icons-material/Add";
 import submitForm from "./submitForm";
+import submitNew from "./submitNew";
 import DataTable from "../../../examples/Tables/DataTable";
 import MDBox from "../../../components/MDBox";
+import MDButton from "../../../components/MDButton";
 
 const bounce = cssTransition({
   enter: "animate__animated animate__bounceIn",
@@ -52,8 +55,12 @@ export default function data() {
   const [id, setId] = useState(0);
   const [students, setStudents] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openNew, setOpenNew] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
   const studentID = localStorage.getItem("id");
+  const [departments, setDepartments] = useState([]);
+  const [majors, setMajors] = useState([]);
+
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -72,8 +79,28 @@ export default function data() {
       .catch(() => {
         setResult({ code: 404, content: "获取学生失败!" });
         handleError(result.content);
+      })
+      .finally(() => {
+        api
+          .get("/major/")
+          .then((response) => {
+            setMajors(response.data);
+            console.log(majors);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        api
+          .get("/department/")
+          .then((response) => {
+            setDepartments(response.data);
+            console.log(departments);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
-  }, [studentID]);
+  }, [studentID, !open]);
 
   function changeInformation(student) {
     console.log(student);
@@ -96,14 +123,24 @@ export default function data() {
     //   });
   }
   function handleClick(student) {
+    console.log(departments);
+    console.log(majors);
     setOpen(true);
     setId(student.student_id);
     changeInformation(student);
   }
   function handleRemove(student) {
-    console.log("删除课程", student);
+    console.log("删除学生", student.student_id);
+    api.delete(`/student/${student.student_id}/`).then(() => {
+      setResult({ code: 200, content: "删除学生成功!" });
+      setStudents((prevstudents) =>
+        prevstudents.filter((prevstudent) => prevstudent.student_id !== student.student_id)
+      );
+    });
   }
-  const handleClose = () => setOpen(false);
+  const handleCloseModify = () => setOpen(false);
+  const handleCloseNew = () => setOpenNew(false);
+
   const columns = [
     { Header: "学号", accessor: "id", width: "25%", align: "left" },
     { Header: "姓名", accessor: "name", align: "left" },
@@ -139,7 +176,7 @@ export default function data() {
       </MDTypography>
     ),
     action: (
-      <Grid spacing={1}>
+      <Grid spacing={1} direction="row">
         <Grid item>
           <MDTypography
             component="a"
@@ -159,7 +196,7 @@ export default function data() {
             variant="caption"
             color="error"
             fontWeight="medium"
-            onClick={() => handleRemove()}
+            onClick={() => handleRemove(student)}
           >
             删除
           </MDTypography>
@@ -167,27 +204,52 @@ export default function data() {
       </Grid>
     ),
   }));
-  function modal() {
+  function modalModify() {
     return (
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseModify}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleClose)}
+        {submitForm(id, handleCloseModify, majors, departments)}
       </Modal>
     );
   }
-
+  function modalNew() {
+    return (
+      <Modal
+        open={openNew}
+        onClose={handleCloseNew}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        {submitNew(id, handleCloseNew, majors, departments)}
+      </Modal>
+    );
+  }
+  function addStudent() {
+    setOpenNew(true);
+  }
   return (
     <MDBox pt={3}>
+      <MDButton
+        pt={3}
+        variant="gradient"
+        color="error"
+        onClick={() => {
+          addStudent();
+        }}
+        style={{ float: "right", marginRight: "20px", marginTop: "-70px" }}
+      >
+        <AddIcon />
+      </MDButton>
       <DataTable
         table={{
           columns,
           rows,
         }}
-        isSorted={false}
+        isSorted
         entriesPerPage={false}
         showTotalEntries={false}
         noEndBorder
@@ -204,7 +266,8 @@ export default function data() {
         pauseOnHover
         theme="colored"
       />
-      {modal()}
+      {modalModify(submitForm)}
+      {modalNew(submitNew)}
     </MDBox>
   );
 }

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 // @mui material components
 import Card from "@mui/material/Card";
 
@@ -10,10 +8,11 @@ import MDButton from "components/MDButton";
 import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-
-function submitForm(id, handleClose) {
-  const [departments, setDepartments] = useState([]);
-  const [majors, setMajors] = useState([]);
+import { useState } from "react";
+// eslint-disable-next-line no-unused-vars
+function submitForm(id, handleClose, majors, departments) {
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedMajor, setSelectedMajor] = useState("");
   const style = {
     position: "absolute",
     top: "50%",
@@ -30,21 +29,13 @@ function submitForm(id, handleClose) {
       Authorization: `Bearer  ${localStorage.getItem("token")}`,
     },
   });
-  useEffect(() => {
-    api.get("/department/").then((response) => {
-      setDepartments(response.data);
-    });
-    api.get(`/major/`).then((response) => {
-      setMajors(response.data);
-    });
-  }, []);
-  const formData = new FormData();
-  formData.append("major", majors);
-  // const navigate = useNavigate();
-  const submit = () => {
-    // 获取用户名和密码输入框的值
 
-    // 发送登录请求
+  const formData = new FormData();
+  formData.append("major_id", selectedMajor);
+  formData.append("dept_id", selectedDepartment);
+  formData.append("student_id", id);
+  const submit = () => {
+    console.log(id);
     api
       .put(`/student/${id}/`, formData)
       .then((response) => {
@@ -61,9 +52,9 @@ function submitForm(id, handleClose) {
     <Card sx={style}>
       <MDBox
         variant="gradient"
-        bgColor="success"
+        bgColor="info"
         borderRadius="lg"
-        coloredShadow="success"
+        coloredShadow="info"
         mx={2}
         mt={-7}
         p={2}
@@ -80,22 +71,38 @@ function submitForm(id, handleClose) {
             <Autocomplete
               disablePortal
               id="学院"
-              label="学院"
               options={departments}
-              renderInput={(params) => <TextField {...params} label="name" />}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => <TextField {...params} label="学院" />}
+              onInputChange={(event, newInputValue) => {
+                const index = departments.findIndex(
+                  (department) => department.name === newInputValue
+                );
+                setSelectedDepartment(index + 1);
+              }}
             />
           </MDBox>
           <MDBox mb={3}>
             <Autocomplete
               disablePortal
               id="专业"
-              label="专业"
               options={majors}
-              renderInput={(params) => <TextField {...params} label="name" />}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => <TextField {...params} label="专业" />}
+              onInputChange={(event, newInputValue) => {
+                // 获取departments中name为newInputValue的id
+                const index = majors.findIndex((major) => major.name === newInputValue);
+                setSelectedMajor(index + 1);
+              }}
             />
           </MDBox>
           <MDBox mt={4}>
-            <MDButton variant="gradient" color="success" fullWidth onClick={() => submit()}>
+            <MDButton
+              variant="gradient"
+              color="info"
+              fullWidth
+              onClick={(option) => submit(option)}
+            >
               提交
             </MDButton>
           </MDBox>

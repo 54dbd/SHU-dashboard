@@ -19,6 +19,14 @@ class Class(models.Model):
     start = models.CharField(max_length=100, blank=True, null=True)
     end = models.CharField(max_length=100, blank=True, null=True)
 
+    class Meta:
+        ordering = ['course_id']
+        constraints = [
+            models.UniqueConstraint(fields=['teacher_id', 'time', 'start', 'end'], name='teacher_time'),
+            models.UniqueConstraint(fields=['time', 'start', 'end', 'classroom'], name='time_classroom'),
+        ]
+
+
 
 class Course(models.Model):
     course_id = models.CharField(max_length=100, primary_key=True)
@@ -65,6 +73,9 @@ class Student(models.Model):
     gpa = models.FloatField(blank=True, null=True)
     dept_id = models.ForeignKey(Department, models.DO_NOTHING)
     major_id = models.ForeignKey(Major, models.DO_NOTHING)
+
+    class Meta:
+        ordering = ['student_id']
 
 
 class Teacher(models.Model):

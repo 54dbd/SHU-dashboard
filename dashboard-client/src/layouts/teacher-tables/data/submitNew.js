@@ -9,9 +9,12 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
+import MDInput from "components/MDInput";
 // eslint-disable-next-line no-unused-vars
-function submitForm(id, handleClose, departments) {
+function submitNew(id, handleClose, departments) {
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [teacherId, setteacherId] = useState("");
+  const [teacherName, setteacherName] = useState("");
   const style = {
     position: "absolute",
     top: "50%",
@@ -31,11 +34,12 @@ function submitForm(id, handleClose, departments) {
 
   const formData = new FormData();
   formData.append("dept_id", selectedDepartment);
-  formData.append("teacher_id", id);
+  formData.append("teacher_id", teacherId);
+  formData.append("name", teacherName);
   const submit = () => {
-    console.log(id);
+    console.log(teacherId);
     api
-      .put(`/teacher/${id}/`, formData)
+      .post("/teacher/", formData)
       .then((response) => {
         if (response.status === 200) {
           console.log("Success");
@@ -50,9 +54,9 @@ function submitForm(id, handleClose, departments) {
     <Card sx={style}>
       <MDBox
         variant="gradient"
-        bgColor="info"
+        bgColor="error"
         borderRadius="lg"
-        coloredShadow="info"
+        coloredShadow="error"
         mx={2}
         mt={-7}
         p={2}
@@ -60,15 +64,34 @@ function submitForm(id, handleClose, departments) {
         textAlign="center"
       >
         <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-          信息修改
+          添加教师
         </MDTypography>
       </MDBox>
       <MDBox pt={4} pb={3} px={3}>
         <MDBox component="form" role="form">
           <MDBox mb={3}>
+            <MDInput
+              type="number"
+              size="small"
+              label="工号"
+              fullWidth
+              onChange={(event) => setteacherId(event.target.value)}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <MDInput
+              type="text"
+              size="small"
+              label="姓名"
+              fullWidth
+              onChange={(event) => setteacherName(event.target.value)}
+            />
+          </MDBox>
+          <MDBox mb={3}>
             <Autocomplete
               disablePortal
               id="学院"
+              size="small"
               options={departments}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} label="学院" />}
@@ -83,7 +106,7 @@ function submitForm(id, handleClose, departments) {
           <MDBox mt={4}>
             <MDButton
               variant="gradient"
-              color="info"
+              color="error"
               fullWidth
               onClick={(option) => submit(option)}
             >
@@ -96,4 +119,4 @@ function submitForm(id, handleClose, departments) {
   );
 }
 
-export default submitForm;
+export default submitNew;
