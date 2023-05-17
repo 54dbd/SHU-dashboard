@@ -107,13 +107,13 @@ class ClassViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     # 删除课程
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def perform_destroy(self, instance):
+        if instance.teacher_id.user_id.id != self.request.user.id:
+            raise serializers.ValidationError({'class_id': '您不是该课程的教师，不能删除'})
         # 如果课程已经有学生选了，就不能删除
         if instance.current_selection != 0:
             raise serializers.ValidationError({'class_id': '该课程已经有学生选了，不能删除'})
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        instance.delete()
 
     # 课程查询
     def get_queryset(self):
@@ -146,7 +146,6 @@ class CourseViewSet(viewsets.ModelViewSet):
         if instance.current_selection != 0:
             raise serializers.ValidationError({'course_id': '该课程已经有学生选了，不能删除'})
         self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
         if self.request.user.is_superuser or self.request.user.is_staff:
@@ -167,22 +166,13 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         serializer.save(dept_id=dept_id)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # 修改系信息
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return Response(serializer.data)
 
     # 删除系
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def perform_destroy(self,instance):
         # 如果系已经有学生了，就不能删除
-        if instance.current_student != 0:
+        if Student.objects.filter(dept_id=instance.dept_id).exists():
             raise serializers.ValidationError({'dept_id': '该系已经有学生了，不能删除'})
-        self.perform_destroy(instance)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        instance.delete()
 
     # 系查询
     def get_queryset(self):
@@ -223,18 +213,14 @@ class StudentViewSet(viewsets.ModelViewSet):
         user = django_user.objects.create_user(username=serializer.validated_data['student_id'], password='password')
         dept_id = self.request.data.get('dept_id')
         major_id = self.request.data.get('major_id')
-        serializer.save(user_id=user, dept_id=dept_id, major_id=major_id)
+        serializer.save(user_id=user)
 
 
-    def destroy(self, request, *args, **kwargs):
-        if self.request.user.is_superuser:
-            instance = self.get_object()
-            # 如果学生已经选了课，就不能删除
-            if CourseSelection.objects.filter(student_id=instance.student_id).exists():
-                raise serializers.ValidationError({'student_id': '该学生已经选了课，不能删除'})
-            self.perform_destroy(instance)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
+    def perform_destroy(self, instance):
+        if CourseSelection.objects.filter(student_id=instance.student_id).exists():
+            raise serializers.ValidationError({'student_id': '该学生已经选了课，不能删除'})
+        instance.user_id.delete()
+        instance.delete()
 
 
 class TeacherViewSet(viewsets.ModelViewSet):
@@ -249,7 +235,9 @@ class TeacherViewSet(viewsets.ModelViewSet):
         serializer.save(user=user)
 
     def perform_destroy(self, instance):
-        instance.user.delete()
+        if Class.objects.filter(teacher_id=instance.teacher_id).exists():
+            raise serializers.ValidationError({'teacher_id': '该教师已经有课程了，不能删除'})
+        instance.user_id.delete()
         instance.delete()
 
     def get_queryset(self):

@@ -25,8 +25,9 @@ class StudentSerializer(serializers.HyperlinkedModelSerializer):
         user = self.context['request'].user
         dept = Department.objects.get(pk=dept_id)
         major = Major.objects.get(pk=major_id)
-        validated_data.update(user_id=user, dept_id=dept, major_id=major)
+        validated_data.update(dept_id=dept, major_id=major)
         return super(StudentSerializer, self).create(validated_data)
+
     def update(self, instance, validated_data):
         student_id = self.initial_data.get('student_id', None)
         student = Student.objects.get(student_id=student_id)
