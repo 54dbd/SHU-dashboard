@@ -25,7 +25,7 @@ class TeacherSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         teacher_id = self.data.get('teacher_id', None)
         teacher = Teacher.objects.get(teacher_id=teacher_id)
-        dept = teacher.dept
+        dept = teacher.dept_id
         dept_id = self.initial_data.get('dept_id', None)
         if dept_id is not None:
             dept = Department.objects.get(pk=dept_id)

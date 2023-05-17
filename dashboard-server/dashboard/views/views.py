@@ -211,8 +211,6 @@ class StudentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         django_user = get_user_model()
         user = django_user.objects.create_user(username=serializer.validated_data['student_id'], password='password')
-        dept_id = self.request.data.get('dept_id')
-        major_id = self.request.data.get('major_id')
         serializer.save(user_id=user)
 
 
@@ -232,7 +230,7 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         django_user = get_user_model()
         user = django_user.objects.create_user(username=serializer.validated_data['teacher_id'], password='password')
-        serializer.save(user=user)
+        serializer.save(user_id=user)
 
     def perform_destroy(self, instance):
         if Class.objects.filter(teacher_id=instance.teacher_id).exists():
