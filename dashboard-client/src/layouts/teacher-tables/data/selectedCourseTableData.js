@@ -87,10 +87,10 @@ export default function data() {
             console.log(departments);
           })
           .catch((error) => {
-            console.log(error);
+            alert(error);
           });
       });
-  }, [teacherID, !open]);
+  }, [teacherID, open, openNew]);
 
   function changeInformation(teacher) {
     console.log(teacher);

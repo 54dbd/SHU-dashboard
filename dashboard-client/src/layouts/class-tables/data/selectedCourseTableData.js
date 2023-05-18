@@ -53,13 +53,13 @@ function handleError(content) {
 }
 export default function data() {
   const [id, setId] = useState(0);
-  const [students, setStudents] = useState([]);
+  const [Courses, setCourses] = useState([]);
   const [open, setOpen] = useState(false);
   const [openNew, setOpenNew] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
-  const studentID = localStorage.getItem("id");
+  const CourseID = localStorage.getItem("id");
   const [departments, setDepartments] = useState([]);
-  const [majors, setMajors] = useState([]);
+  const [semesters, setSemesters] = useState([]);
 
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
@@ -71,25 +71,16 @@ export default function data() {
 
   useEffect(() => {
     api
-      .get("/student/")
+      .get("/class/")
       .then((response) => {
-        setStudents(response.data);
-        handleSuccess("获取学生成功!");
+        setCourses(response.data);
+        handleSuccess("获取课程成功!");
       })
       .catch(() => {
-        setResult({ code: 404, content: "获取学生失败!" });
+        setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       })
       .finally(() => {
-        api
-          .get("/major/")
-          .then((response) => {
-            setMajors(response.data);
-            console.log(majors);
-          })
-          .catch((error) => {
-            alert(error);
-          });
         api
           .get("/department/")
           .then((response) => {
@@ -99,21 +90,30 @@ export default function data() {
           .catch((error) => {
             alert(error);
           });
+        api
+          .get("/semester/")
+          .then((response) => {
+            setSemesters(response.data);
+            console.log(semesters);
+          })
+          .catch((error) => {
+            alert(error);
+          });
       });
-  }, [studentID, !open]);
+  }, [CourseID, open, openNew]);
 
-  function changeInformation(student) {
-    console.log(student);
+  function changeInformation(Course) {
+    console.log(Course);
     // api
-    //   .delete(`/student-selection/`, {
+    //   .delete(`/Course-selection/`, {
     //     data: {
     //       class_id: classId,
     //     },
     //   })
     //   .then(() => {
     //     setResult({ code: 200, content: "删除课程成功!" });
-    //     setstudents((prevstudents) =>
-    //       prevstudents.filter((prevstudent) => prevstudent.class_id !== classId)
+    //     setCourses((prevCourses) =>
+    //       prevCourses.filter((prevCourse) => prevCourse.class_id !== classId)
     //     );
     //     // 刷新页面
     //     // window.location.reload();
@@ -122,19 +122,18 @@ export default function data() {
     //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
     //   });
   }
-  function handleClick(student) {
+  function handleClick(Course) {
     console.log(departments);
-    console.log(majors);
     setOpen(true);
-    setId(student.student_id);
-    changeInformation(student);
+    setId(Course.Course_id);
+    changeInformation(Course);
   }
-  function handleRemove(student) {
-    console.log("删除学生", student.student_id);
-    api.delete(`/student/${student.student_id}/`).then(() => {
-      setResult({ code: 200, content: "删除学生成功!" });
-      setStudents((prevstudents) =>
-        prevstudents.filter((prevstudent) => prevstudent.student_id !== student.student_id)
+  function handleRemove(Course) {
+    console.log("删除课程", Course.Course_id);
+    api.delete(`/class/${Course.Course_id}/`).then(() => {
+      setResult({ code: 200, content: "删除课程成功!" });
+      setCourses((prevCourses) =>
+        prevCourses.filter((prevCourse) => prevCourse.Course_id !== Course.Course_id)
       );
     });
   }
@@ -142,37 +141,49 @@ export default function data() {
   const handleCloseNew = () => setOpenNew(false);
 
   const columns = [
-    { Header: "学号", accessor: "id", width: "25%", align: "left" },
-    { Header: "姓名", accessor: "name", align: "left" },
-    { Header: "GPA", accessor: "gpa", align: "left" },
-    { Header: "学院", accessor: "department", align: "left" },
-    { Header: "专业", accessor: "major", align: "left" },
+    { Header: "课程号", accessor: "id", width: "25%", align: "left" },
+    { Header: "课程名", accessor: "name", align: "left" },
+    { Header: "学期", accessor: "semester", align: "left" },
+    { Header: "老师", accessor: "teacher", align: "left" },
+    { Header: "教室", accessor: "classroom", align: "left" },
+    { Header: "选课情况", accessor: "selection", align: "left" },
+    { Header: "上课时间", accessor: "time", align: "left" },
     { Header: "操作", accessor: "action", align: "center" },
   ];
-  const rows = students.map((student) => ({
+  const rows = Courses.map((Course) => ({
     id: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.student_id}
+        {Course.course_id.course_id}
       </MDTypography>
     ),
     name: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.name}
+        {Course.course_id.name}
       </MDTypography>
     ),
-    gpa: (
+    semester: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.gpa}
+        {Course.semester_id.name}
       </MDTypography>
     ),
-    department: (
+    teacher: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.dept_id.name}
+        {Course.teacher_id.name}
       </MDTypography>
     ),
-    major: (
+    classroom: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.major_id.name}
+        {Course.classroom}
+      </MDTypography>
+    ),
+    selection: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {Course.current_selection} / {Course.max_selection}
+      </MDTypography>
+    ),
+    time: (
+      <MDTypography variant="caption" fontWeight="medium">
+        星期{Course.time} {Course.start}-{Course.end}节
       </MDTypography>
     ),
     action: (
@@ -184,7 +195,7 @@ export default function data() {
             variant="caption"
             color="info"
             fontWeight="medium"
-            onClick={() => handleClick(student)}
+            onClick={() => handleClick(Course)}
           >
             修改信息
           </MDTypography>
@@ -196,7 +207,7 @@ export default function data() {
             variant="caption"
             color="error"
             fontWeight="medium"
-            onClick={() => handleRemove(student)}
+            onClick={() => handleRemove(Course)}
           >
             删除
           </MDTypography>
@@ -212,7 +223,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleCloseModify, majors, departments, handleError)}
+        {submitForm(id, handleCloseModify, departments, semesters, handleError)}
       </Modal>
     );
   }
@@ -224,11 +235,11 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitNew(id, handleCloseNew, majors, departments, handleError)}
+        {submitNew(id, handleCloseNew, departments, semesters, handleError)}
       </Modal>
     );
   }
-  function addStudent() {
+  function addCourse() {
     setOpenNew(true);
   }
   return (
@@ -238,7 +249,7 @@ export default function data() {
         variant="gradient"
         color="error"
         onClick={() => {
-          addStudent();
+          addCourse();
         }}
         style={{ float: "right", marginRight: "20px", marginTop: "-70px" }}
       >

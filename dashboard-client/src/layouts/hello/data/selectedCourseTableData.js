@@ -47,7 +47,7 @@ export default function data() {
         })
         .catch((error) => {
           setResult({ code: 404, content: "获取课程失败!" });
-          console.log(error);
+          alert(error);
         });
     }
   }, [condition]);

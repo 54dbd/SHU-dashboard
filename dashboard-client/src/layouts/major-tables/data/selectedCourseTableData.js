@@ -13,7 +13,6 @@ import { Modal } from "@mui/material";
 import { cssTransition, toast, ToastContainer } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
-import submitForm from "./submitForm";
 import submitNew from "./submitNew";
 import DataTable from "../../../examples/Tables/DataTable";
 import MDBox from "../../../components/MDBox";
@@ -52,13 +51,9 @@ function handleError(content) {
   });
 }
 export default function data() {
-  const [id, setId] = useState(0);
-  const [Courses, setCourses] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [majors, setmajors] = useState([]);
   const [openNew, setOpenNew] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
-  const CourseID = localStorage.getItem("id");
-  const [departments, setDepartments] = useState([]);
 
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
@@ -70,98 +65,42 @@ export default function data() {
 
   useEffect(() => {
     api
-      .get("/course/")
+      .get("/major/")
       .then((response) => {
-        setCourses(response.data);
-        handleSuccess("获取课程成功!");
+        setmajors(response.data);
+        handleSuccess("获取专业成功!");
       })
       .catch(() => {
-        setResult({ code: 404, content: "获取课程失败!" });
+        setResult({ code: 404, content: "获取专业失败!" });
         handleError(result.content);
-      })
-      .finally(() => {
-        api
-          .get("/department/")
-          .then((response) => {
-            setDepartments(response.data);
-            console.log(departments);
-          })
-          .catch((error) => {
-            alert(error);
-          });
       });
-  }, [CourseID, open, openNew]);
+  }, [openNew]);
 
-  function changeInformation(Course) {
-    console.log(Course);
-    // api
-    //   .delete(`/Course-selection/`, {
-    //     data: {
-    //       class_id: classId,
-    //     },
-    //   })
-    //   .then(() => {
-    //     setResult({ code: 200, content: "删除课程成功!" });
-    //     setCourses((prevCourses) =>
-    //       prevCourses.filter((prevCourse) => prevCourse.class_id !== classId)
-    //     );
-    //     // 刷新页面
-    //     // window.location.reload();
-    //   })
-    //   .catch(() => {
-    //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
-    //   });
-  }
-  function handleClick(Course) {
-    console.log(departments);
-    setOpen(true);
-    setId(Course.course_id);
-    changeInformation(Course);
-  }
-  function handleRemove(Course) {
-    console.log("删除课程", Course.course_id);
-    api.delete(`/course/${Course.course_id}/`).then(() => {
-      setResult({ code: 200, content: "删除课程成功!" });
-      setCourses((prevCourses) =>
-        prevCourses.filter((prevCourse) => prevCourse.course_id !== Course.course_id)
+  function handleRemove(major) {
+    console.log("删除专业", major.major_id);
+    api.delete(`/major/${major.major_id}/`).then(() => {
+      setResult({ code: 200, content: "删除专业成功!" });
+      setmajors((prevmajors) =>
+        prevmajors.filter((prevmajor) => prevmajor.major_id !== major.major_id)
       );
     });
   }
-  const handleCloseModify = () => setOpen(false);
   const handleCloseNew = () => setOpenNew(false);
 
   const columns = [
-    { Header: "课程号", accessor: "id", width: "25%", align: "left" },
-    { Header: "课程名", accessor: "name", align: "center" },
-    { Header: "学院", accessor: "department", align: "center" },
-    { Header: "学分", accessor: "credit", align: "center" },
-    { Header: "平时分占比", accessor: "percentage", align: "center" },
+    { Header: "专业号", accessor: "id", width: "25%", align: "left" },
+    { Header: "专业名", accessor: "name", align: "left" },
     { Header: "操作", accessor: "action", align: "center" },
   ];
-  const rows = Courses.map((Course) => ({
+  const rows = majors.map((major) => ({
     id: (
       <MDTypography variant="caption" fontWeight="medium">
-        {Course.course_id}
+        {major.major_id}
       </MDTypography>
     ),
     name: (
       <MDTypography variant="caption" fontWeight="medium">
-        {Course.name}
-      </MDTypography>
-    ),
-    credit: (
-      <MDTypography variant="caption" fontWeight="medium">
-        {Course.credit}
-      </MDTypography>
-    ),
-    percentage: (
-      <MDTypography variant="caption" fontWeight="medium">
-        {Course.gp_percentage * 100}%
-      </MDTypography>
-    ),
-    department: (
-      <MDTypography variant="caption" fontWeight="medium">
-        {Course.dept_id.name}
+        {major.name}
       </MDTypography>
     ),
     action: (
@@ -171,21 +110,9 @@ export default function data() {
             component="a"
             href="#"
             variant="caption"
-            color="info"
-            fontWeight="medium"
-            onClick={() => handleClick(Course)}
-          >
-            修改信息
-          </MDTypography>
-        </Grid>
-        <Grid item>
-          <MDTypography
-            component="a"
-            href="#"
-            variant="caption"
             color="error"
             fontWeight="medium"
-            onClick={() => handleRemove(Course)}
+            onClick={() => handleRemove(major)}
           >
             删除
           </MDTypography>
@@ -193,18 +120,6 @@ export default function data() {
       </Grid>
     ),
   }));
-  function modalModify() {
-    return (
-      <Modal
-        open={open}
-        onClose={handleCloseModify}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        {submitForm(id, handleCloseModify, departments, handleError)}
-      </Modal>
-    );
-  }
   function modalNew() {
     return (
       <Modal
@@ -213,11 +128,11 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitNew(id, handleCloseNew, departments, handleError)}
+        {submitNew(handleCloseNew)}
       </Modal>
     );
   }
-  function addCourse() {
+  function addmajor() {
     setOpenNew(true);
   }
   return (
@@ -227,7 +142,7 @@ export default function data() {
         variant="gradient"
         color="error"
         onClick={() => {
-          addCourse();
+          addmajor();
         }}
         style={{ float: "right", marginRight: "20px", marginTop: "-70px" }}
       >
@@ -255,7 +170,6 @@ export default function data() {
         pauseOnHover
         theme="colored"
       />
-      {modalModify(submitForm)}
       {modalNew(submitNew)}
     </MDBox>
   );

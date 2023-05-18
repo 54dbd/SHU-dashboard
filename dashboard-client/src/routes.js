@@ -41,7 +41,9 @@ import ScoreTables from "layouts/score-tables";
 import StudentTables from "layouts/student-tables";
 import TeacherTables from "layouts/teacher-tables";
 import DepartmentTables from "layouts/department-tables";
+import MajorTables from "layouts/major-tables";
 import CourseTables from "layouts/course-tables";
+import ClassTables from "layouts/class-tables";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import Hello from "layouts/hello";
@@ -99,11 +101,29 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "专业信息管理",
+    key: "major-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/major-tables",
+    component: <MajorTables />,
+    permission: "admin",
+  },
+  {
+    type: "collapse",
     name: "课程信息管理",
     key: "course-tables",
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/course-tables",
     component: <CourseTables />,
+    permission: "admin",
+  },
+  {
+    type: "collapse",
+    name: "开课信息管理",
+    key: "class-tables",
+    icon: <Icon fontSize="small">table_view</Icon>,
+    route: "/class-tables",
+    component: <ClassTables />,
     permission: "admin",
   },
   {

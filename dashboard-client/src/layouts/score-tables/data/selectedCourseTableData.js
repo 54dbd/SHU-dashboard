@@ -1,20 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/function-component-definition */
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // Material Dashboard 2 React components
 // import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -95,9 +78,8 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
       .catch(() => {
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
-        // console.log(error);
       });
-  }, [courseFilter, semesterFilter, !open]);
+  }, [courseFilter, semesterFilter, open]);
 
   function handleClick(course) {
     setOpen(true);
@@ -111,6 +93,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
     { Header: "学期", accessor: "semester", width: "25%", align: "left" },
     { Header: "课程名", accessor: "course_name", align: "left" },
     { Header: "课程号", accessor: "course_id", align: "left" },
+    { Header: "学生姓名", accessor: "name", align: "center" },
     { Header: "平时成绩", accessor: "gp", align: "center" },
     { Header: "考试成绩", accessor: "exam", align: "center" },
     { Header: "总成绩", accessor: "score", align: "center" },
@@ -119,6 +102,11 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
     { Header: "操作", accessor: "action", align: "center" },
   ];
   const rows = courses.map((course) => ({
+    name: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.student_id.name}
+      </MDTypography>
+    ),
     semester: (
       <MDTypography variant="caption" fontWeight="medium">
         {course.class_id.semester_id.name}
@@ -180,7 +168,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleSubmit)}
+        {submitForm(id, handleSubmit, handleError)}
       </Modal>
     );
   }

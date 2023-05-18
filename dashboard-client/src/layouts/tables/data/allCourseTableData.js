@@ -21,11 +21,46 @@ import MDTypography from "components/MDTypography";
 // import MDAvatar from "components/MDAvatar";
 // import MDBadge from "components/MDBadge";
 import axios from "axios";
+import { cssTransition, toast, ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
+import DataTable from "../../../examples/Tables/DataTable";
+import MDBox from "../../../components/MDBox";
 
 // Images
-import { useEffect, useState } from "react";
 
-export default function data() {
+const bounce = cssTransition({
+  enter: "animate__animated animate__bounceIn",
+  exit: "animate__animated animate__bounceOut",
+});
+function handleSuccess(content) {
+  toast.success(content, {
+    position: "top-center",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+    transition: bounce,
+    style: { fontSize: "15px" },
+  });
+}
+function handleError(content) {
+  toast.error(content, {
+    position: "top-center",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+    transition: bounce,
+    style: { fontSize: "10px" },
+  });
+}
+export default function data(courseFilter, semesterFilter, courseNameFilter, semesterNameFilter) {
   const [courses, setCourses] = useState([]);
   const [result, setResult] = useState({ code: 0, content: "" });
   const api = axios.create({
@@ -36,17 +71,26 @@ export default function data() {
     },
   });
   useEffect(() => {
+    let url = "/class/";
+    if (courseFilter && semesterFilter) {
+      url += `?course_id=${courseFilter}&semester_id=${semesterFilter}`;
+    } else if (courseFilter) {
+      url += `?course_id=${courseFilter}`;
+    } else if (semesterFilter) {
+      url += `?semester_id=${semesterFilter}`;
+    }
     api
-      .get(`/class/`)
+      .get(url)
       .then((response) => {
         setCourses(response.data);
-        // console.log(response.data.results);
+        handleSuccess(`根据${courseNameFilter},${semesterNameFilter}获取课程成功!`);
       })
-      .catch((error) => {
+      .catch(() => {
         setResult({ code: 404, content: "获取课程失败!" });
-        console.log(error);
+        handleError(result.content);
       });
-  }, []);
+  }, [courseFilter, semesterFilter]);
+
   function addCourse(course) {
     const classId = course.class_id;
     api
@@ -59,65 +103,101 @@ export default function data() {
         // window.location.reload(); // 刷新页面
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
         setResult({ code: 404, content: "你已经选过这门课啦!" });
       });
   }
-  return {
-    columns: [
-      { Header: "课程名", accessor: "course_name", width: "25%", align: "left" },
-      { Header: "课程号", accessor: "course_id", align: "left" },
-      { Header: "学分", accessor: "point", align: "center" },
-      { Header: "教师姓名", accessor: "teacher", align: "center" },
-      { Header: "上课时间", accessor: "time", align: "center" },
-      { Header: "上课教室", accessor: "classroom", align: "center" },
-      { Header: "操作", accessor: "action", align: "center" },
-    ],
 
-    rows: courses.map((course) => ({
-      course_name: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.course_id.name}
-        </MDTypography>
-      ),
-      course_id: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.course_id.course_id}
-        </MDTypography>
-      ),
-      point: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.course_id.credit}
-        </MDTypography>
-      ),
-      time: (
-        <MDTypography variant="caption" fontWeight="medium">
-          星期{course.time} {course.start}-{course.end}节
-        </MDTypography>
-      ),
-      classroom: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.classroom}
-        </MDTypography>
-      ),
-      teacher: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.teacher_id.name}
-        </MDTypography>
-      ),
-      action: (
-        <MDTypography
-          component="a"
-          href="#"
-          variant="caption"
-          color="success"
-          fontWeight="medium"
-          onClick={() => addCourse(course)}
-        >
-          选课
-        </MDTypography>
-      ),
-    })),
-    results: result,
-  };
+  const columns = [
+    { Header: "课程名", accessor: "course_name", width: "25%", align: "left" },
+    { Header: "课程号", accessor: "course_id", align: "left" },
+    { Header: "学期", accessor: "semester", align: "center" },
+    { Header: "学分", accessor: "point", align: "center" },
+    { Header: "教师姓名", accessor: "teacher", align: "center" },
+    { Header: "上课时间", accessor: "time", align: "center" },
+    { Header: "上课教室", accessor: "classroom", align: "center" },
+    { Header: "选课情况", accessor: "selection", align: "left" },
+    { Header: "操作", accessor: "action", align: "center" },
+  ];
+
+  const rows = courses.map((course) => ({
+    semester: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.semester_id.name}
+      </MDTypography>
+    ),
+    course_name: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.course_id.name}
+      </MDTypography>
+    ),
+    course_id: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.course_id.course_id}
+      </MDTypography>
+    ),
+    point: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.course_id.credit}
+      </MDTypography>
+    ),
+    time: (
+      <MDTypography variant="caption" fontWeight="medium">
+        星期{course.time} {course.start}-{course.end}节
+      </MDTypography>
+    ),
+    classroom: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.classroom}
+      </MDTypography>
+    ),
+    teacher: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.teacher_id.name}
+      </MDTypography>
+    ),
+    selection: (
+      <MDTypography variant="caption" fontWeight="medium">
+        {course.current_selection} / {course.max_selection}
+      </MDTypography>
+    ),
+    action: (
+      <MDTypography
+        component="a"
+        href="#"
+        variant="caption"
+        color="success"
+        fontWeight="medium"
+        onClick={() => addCourse(course)}
+      >
+        选课
+      </MDTypography>
+    ),
+  }));
+  return (
+    <MDBox pt={3}>
+      <DataTable
+        table={{
+          columns,
+          rows,
+        }}
+        isSorted={false}
+        entriesPerPage={false}
+        showTotalEntries={false}
+        noEndBorder
+      />
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </MDBox>
+  );
 }

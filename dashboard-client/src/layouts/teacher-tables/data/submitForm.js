@@ -43,7 +43,7 @@ function submitForm(id, handleClose, departments) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
       });
   };
   return (

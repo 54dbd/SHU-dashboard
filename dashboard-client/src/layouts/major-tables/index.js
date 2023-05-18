@@ -18,7 +18,7 @@ import selectedCourseTableData from "./data/selectedCourseTableData";
 // import MDButton from "../../components/MDButton";
 
 // import MDAlert from "../../components/MDAlert";
-function DepartmentTable() {
+function MajorTable() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -38,7 +38,7 @@ function DepartmentTable() {
                 coloredShadow="error"
               >
                 <MDTypography variant="h2" color="white">
-                  学院管理
+                  专业管理
                 </MDTypography>
               </MDBox>
               {selectedCourseTableData()}
@@ -51,4 +51,4 @@ function DepartmentTable() {
   );
 }
 
-export default DepartmentTable;
+export default MajorTable;

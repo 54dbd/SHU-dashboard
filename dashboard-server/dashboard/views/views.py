@@ -116,11 +116,11 @@ class ClassViewSet(viewsets.ModelViewSet):
         instance.delete()
 
     # 课程查询
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Class.objects.all()
-        else:
-            return Class.objects.filter(teacher_id=self.request.user.id)
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser:
+    #         return Class.objects.all()
+    #     else:
+    #         return Class.objects.filter(teacher_id=self.request.user.id)
 
 
 class CourseViewSet(viewsets.ModelViewSet):

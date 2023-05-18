@@ -9,10 +9,13 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
+import MDInput from "components/MDInput";
 // eslint-disable-next-line no-unused-vars
-function submitForm(id, handleClose, majors, departments, handleError) {
+function submitNew(id, handleClose, departments, semesters) {
   const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [selectedMajor, setSelectedMajor] = useState("");
+  const [selectedSemester, setSelectedSemester] = useState("");
+  const [ClassId, setClassId] = useState("");
+  const [ClassName, setClassName] = useState("");
   const style = {
     position: "absolute",
     top: "50%",
@@ -31,13 +34,12 @@ function submitForm(id, handleClose, majors, departments, handleError) {
   });
 
   const formData = new FormData();
-  formData.append("major_id", selectedMajor);
   formData.append("dept_id", selectedDepartment);
-  formData.append("student_id", id);
+  formData.append("Class_id", ClassId);
+  formData.append("name", ClassName);
   const submit = () => {
-    console.log(id);
     api
-      .put(`/student/${id}/`, formData)
+      .post("/class/", formData)
       .then((response) => {
         if (response.status === 200) {
           console.log("Success");
@@ -52,9 +54,9 @@ function submitForm(id, handleClose, majors, departments, handleError) {
     <Card sx={style}>
       <MDBox
         variant="gradient"
-        bgColor="info"
+        bgColor="error"
         borderRadius="lg"
-        coloredShadow="info"
+        coloredShadow="error"
         mx={2}
         mt={-7}
         p={2}
@@ -62,15 +64,40 @@ function submitForm(id, handleClose, majors, departments, handleError) {
         textAlign="center"
       >
         <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-          信息修改
+          添加教师
         </MDTypography>
       </MDBox>
       <MDBox pt={4} pb={3} px={3}>
         <MDBox component="form" role="form">
           <MDBox mb={3}>
+            <MDInput
+              type="number"
+              size="small"
+              label="课程名"
+              fullWidth
+              onChange={(event) => setCourseName(event.target.value)}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <Autocomplete
+              disablePortal
+              id="学期"
+              size="small"
+              options={semesters}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => <TextField {...params} label="学期" />}
+              onInputChange={(event, newInputValue) => {
+                const index = semesters.findIndex((semester) => semester.name === newInputValue);
+                selectedSemester(index + 1);
+              }}
+            />
+          </MDBox>
+
+          <MDBox mb={3}>
             <Autocomplete
               disablePortal
               id="学院"
+              size="small"
               options={departments}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => <TextField {...params} label="学院" />}
@@ -85,21 +112,39 @@ function submitForm(id, handleClose, majors, departments, handleError) {
           <MDBox mb={3}>
             <Autocomplete
               disablePortal
-              id="专业"
-              options={majors}
+              id="老师"
+              size="small"
+              options={teachers}
               getOptionLabel={(option) => option.name}
-              renderInput={(params) => <TextField {...params} label="专业" />}
+              renderInput={(params) => <TextField {...params} label="老师" />}
               onInputChange={(event, newInputValue) => {
-                // 获取departments中name为newInputValue的id
-                const index = majors.findIndex((major) => major.name === newInputValue);
-                setSelectedMajor(index + 1);
+                const index = teachers.findIndex((teacher) => teacher.name === newInputValue);
+                selectedTeacher(index + 1);
               }}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <MDInput
+              type="number"
+              size="small"
+              label="课程容量"
+              fullWidth
+              onChange={(event) => setClassSize(event.target.value)}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <MDInput
+              type="number"
+              size="small"
+              label="上课时间"
+              fullWidth
+              onChange={(event) => setClassroom(event.target.value)}
             />
           </MDBox>
           <MDBox mt={4}>
             <MDButton
               variant="gradient"
-              color="info"
+              color="error"
               fullWidth
               onClick={(option) => submit(option)}
             >
@@ -112,4 +157,4 @@ function submitForm(id, handleClose, majors, departments, handleError) {
   );
 }
 
-export default submitForm;
+export default submitNew;

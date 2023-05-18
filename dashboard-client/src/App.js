@@ -98,7 +98,7 @@ export default function App() {
         setMeaningLess(true);
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
       });
   }, []);
   // Open sidenav when mouse enter on mini sidenav

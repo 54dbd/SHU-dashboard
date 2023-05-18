@@ -25,7 +25,7 @@ import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import axios from "axios";
 
-function submitForm(id, handleClose) {
+function submitForm(id, handleClose, handleError) {
   const [exam, setExam] = useState("");
   const [gp, setGp] = useState("");
   const style = {
@@ -59,7 +59,8 @@ function submitForm(id, handleClose) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        alert(error);
+        handleError(error);
       });
   };
   return (
