@@ -10,7 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
-function submitForm(id, handleClose, departments, handleError) {
+function submitForm(id, handleClose, departments, teachers, handleError) {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const style = {
     position: "absolute",
@@ -36,11 +36,9 @@ function submitForm(id, handleClose, departments, handleError) {
     console.log(id);
     api
       .put(`/Course/${id}/`, formData)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Success");
-          handleClose();
-        }
+      .then(() => {
+        console.log("Success");
+        handleClose();
       })
       .catch((error) => {
         alert(error);

@@ -63,6 +63,8 @@ function handleError(content) {
 export default function data(courseFilter, semesterFilter, courseNameFilter, semesterNameFilter) {
   const [courses, setCourses] = useState([]);
   const [result, setResult] = useState({ code: 0, content: "" });
+  const [refresh, setRefresh] = useState(false);
+
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -89,7 +91,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       });
-  }, [courseFilter, semesterFilter]);
+  }, [courseFilter, semesterFilter, refresh]);
 
   function addCourse(course) {
     const classId = course.class_id;
@@ -98,13 +100,12 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         class_id: classId,
       })
       .then(() => {
-        setResult({ code: 200, content: "选课成功!" });
+        handleSuccess("选课成功!");
         setCourses((prevCourses) => [...prevCourses, course]);
-        // window.location.reload(); // 刷新页面
+        setRefresh(!refresh);
       })
-      .catch((error) => {
-        alert(error);
-        setResult({ code: 404, content: "你已经选过这门课啦!" });
+      .catch(() => {
+        handleSuccess("你已经选过这门课啦!");
       });
   }
 
