@@ -51,7 +51,7 @@ function submitNew(id, handleClose, majors, departments) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
   return (

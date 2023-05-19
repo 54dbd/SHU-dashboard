@@ -42,7 +42,7 @@ function submitNew(id, handleClose, departments) {
         handleClose();
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
   return (

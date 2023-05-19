@@ -50,7 +50,7 @@ function submitNew(id, handleClose, departments) {
         setPercentage("");
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
   return (

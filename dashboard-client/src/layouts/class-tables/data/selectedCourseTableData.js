@@ -78,7 +78,8 @@ export default function data() {
         setCourses(response.data);
         handleSuccess("获取课程成功!");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       })
@@ -89,7 +90,7 @@ export default function data() {
             setDepartments(response.data);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
         api
           .get("/semester/")
@@ -97,7 +98,7 @@ export default function data() {
             setSemesters(response.data);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
         api
           .get("/teacher/")
@@ -105,7 +106,7 @@ export default function data() {
             setTeachers(response.data);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
         api
           .get("/course/")
@@ -113,7 +114,7 @@ export default function data() {
             setGetCourse(response.data);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
       });
   }, [CourseID, open, openNew]);

@@ -58,7 +58,7 @@ function submitNew(handleClose, departments, semesters, teachers, courses, handl
         handleClose();
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
   return (

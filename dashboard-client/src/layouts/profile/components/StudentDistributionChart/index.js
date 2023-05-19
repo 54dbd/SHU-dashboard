@@ -4,6 +4,7 @@ import axios from "axios";
 
 function StudentDistributionChart() {
   const [num, setNum] = useState([]);
+  const [classFilter] = useState("50");
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -13,7 +14,11 @@ function StudentDistributionChart() {
   });
 
   useEffect(() => {
-    api.get("/course-selection/getStudentDistribution").then((response) => {
+    let url = "/course-selection/getStudentDistribution/";
+    if (classFilter) {
+      url += `?class_id=${classFilter}`;
+    }
+    api.get(url).then((response) => {
       console.log("Success");
       setNum(response.data.num);
     });
@@ -27,10 +32,20 @@ function StudentDistributionChart() {
       name: "人数",
       type: "value",
     },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        shadowStyle: {
+          color: "rgba(0, 0, 0, 0.1)",
+        },
+        type: "shadow",
+      },
+    },
     series: [
       {
         data: num,
         type: "bar",
+        color: ["#5ab25e", "#0f3443"],
       },
     ],
   };

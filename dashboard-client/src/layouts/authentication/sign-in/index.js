@@ -71,7 +71,7 @@ function Basic() {
       })
       .catch((error) => {
         // 处理异常
-        console.error(error);
+        console.log(error);
         alert("登录失败，请稍后再试！");
       });
   };

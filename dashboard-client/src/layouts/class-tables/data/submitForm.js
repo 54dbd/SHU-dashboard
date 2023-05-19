@@ -56,7 +56,7 @@ function submitForm(id, handleClose, semesters, teachers, handleError) {
         handleClose();
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
         handleError(error);
       });
   };

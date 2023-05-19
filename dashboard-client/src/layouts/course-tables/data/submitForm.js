@@ -49,7 +49,7 @@ function submitForm(id, handleClose, departments, handleError) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
         handleError(error);
       });
   };

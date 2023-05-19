@@ -13,8 +13,6 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect } from "react";
-
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 
@@ -32,27 +30,10 @@ import MDAvatar from "components/MDAvatar";
 // Images
 import burceMars from "assets/images/bruce-mars.jpg";
 import backgroundImage from "assets/images/bg-profile.jpeg";
-import axios from "axios";
-import { Icon } from "@mui/material";
 
 function Header({ children }) {
-  const [gpa, setGpa] = useState([]);
   const username = localStorage.getItem("username");
   const id = localStorage.getItem("id");
-  const api = axios.create({
-    baseURL: `http://localhost:8000/v1/`,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer  ${localStorage.getItem("token")}`,
-    },
-  });
-  useEffect(() => {
-    if (id !== null) {
-      api.get(`/user/${id}`).then((response) => {
-        setGpa(response.data.student.gpa.toFixed(2));
-      });
-    }
-  }, [id]);
 
   return (
     <MDBox position="relative" mb={5}>
@@ -95,37 +76,6 @@ function Header({ children }) {
                 {id}
               </MDTypography>
             </MDBox>
-          </Grid>
-          <Grid item style={{ position: "absolute", right: "5%", top: "4%" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <MDBox
-                variant="gradient"
-                bgColor="success"
-                color="white"
-                coloredShadow="success"
-                borderRadius="xl"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                width="5rem"
-                height="5rem"
-                mt={-3}
-              >
-                <Icon fontSize="large" color="inherit">
-                  school
-                </Icon>
-              </MDBox>
-              <MDTypography variant="h4" fontWeight="medium">
-                GPA: {gpa}
-              </MDTypography>
-            </div>
           </Grid>
         </Grid>
         {children}

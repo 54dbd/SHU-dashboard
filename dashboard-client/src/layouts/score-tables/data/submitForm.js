@@ -59,7 +59,7 @@ function submitForm(id, handleClose, handleError) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
         handleError(error);
       });
   };

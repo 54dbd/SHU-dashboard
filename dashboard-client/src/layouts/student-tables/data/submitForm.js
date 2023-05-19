@@ -43,7 +43,7 @@ function submitForm(id, handleClose, majors, departments, handleError) {
         handleClose();
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
   return (

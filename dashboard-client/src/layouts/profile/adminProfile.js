@@ -25,7 +25,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 // Overview page components
-import Header from "layouts/profile/components/Header";
+import Header from "layouts/profile/components/Header_noGpa";
 // Data
 // Images
 import GPAAreaChart from "./components/GPAAreaChart";
@@ -33,7 +33,7 @@ import CourseBarChart from "./components/CourseBarChart";
 import DataTable from "../../examples/Tables/DataTable";
 import selectedCourseTableData from "./data/selectedCourseTableData";
 
-function Overview() {
+function adminProfile() {
   const { columns, rows } = selectedCourseTableData();
   return (
     <DashboardLayout>
@@ -75,4 +75,4 @@ function Overview() {
   );
 }
 
-export default Overview;
+export default adminProfile;

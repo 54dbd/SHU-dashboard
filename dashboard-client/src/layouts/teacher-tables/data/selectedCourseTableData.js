@@ -75,7 +75,9 @@ export default function data() {
         setteachers(response.data);
         handleSuccess("获取教师成功!");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
+
         setResult({ code: 404, content: "获取教师失败!" });
         handleError(result.content);
       })
@@ -87,7 +89,7 @@ export default function data() {
             console.log(departments);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
       });
   }, [teacherID, open, openNew]);
@@ -108,7 +110,7 @@ export default function data() {
     //     // 刷新页面
     //     // window.location.reload();
     //   })
-    //   .catch(() => {
+    //   .catch((error) => {
     //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
     //   });
   }

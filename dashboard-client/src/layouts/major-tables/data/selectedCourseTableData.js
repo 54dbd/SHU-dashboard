@@ -70,7 +70,8 @@ export default function data() {
         setmajors(response.data);
         handleSuccess("获取专业成功!");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setResult({ code: 404, content: "获取专业失败!" });
         handleError(result.content);
       });

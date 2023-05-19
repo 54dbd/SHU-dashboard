@@ -87,7 +87,8 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         setCourses(response.data);
         handleSuccess(`根据${courseNameFilter},${semesterNameFilter}获取课程成功!`);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       });
@@ -104,7 +105,8 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         setCourses((prevCourses) => [...prevCourses, course]);
         setRefresh(!refresh);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         handleSuccess("你已经选过这门课啦!");
       });
   }

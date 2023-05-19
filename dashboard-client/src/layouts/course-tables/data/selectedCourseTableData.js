@@ -76,7 +76,8 @@ export default function data() {
         setCourses(response.data);
         handleSuccess("获取课程成功!");
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       })
@@ -88,7 +89,7 @@ export default function data() {
             console.log(departments);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
         api
           .get("/semester/")
@@ -97,7 +98,7 @@ export default function data() {
             console.log(departments);
           })
           .catch((error) => {
-            alert(error);
+            console.log(error);
           });
       });
   }, [CourseID, open, openNew]);
@@ -118,7 +119,7 @@ export default function data() {
     //     // 刷新页面
     //     // window.location.reload();
     //   })
-    //   .catch(() => {
+    //   .catch((error) => {
     //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
     //   });
   }
