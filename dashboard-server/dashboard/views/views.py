@@ -140,6 +140,21 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
                          'semester': class_.semester_id.name, 'gpa': gpa})
         return Response(data)
 
+    @action(detail=False, methods=['get'])
+    def getStudentDistribution(self, request):
+        # 用class_id筛选,
+        # 返回course-selection中请求者所请求的class的gpa不同分段学生人数。
+        # 固定对应[0, 1.0, 1.5, 1.7, 2.0, 2.3, 2.7, 3.0, 3.3, 3.7, 4.0]11个值的
+        # "num":[0,0,3,4,5,6,7,8,9,7,5]
+        # 只需要返回num
+        class_id = self.request.query_params.get('class_id', None)
+        if class_id is not None:
+            course_selections = CourseSelection.objects.filter(class_id=class_id)
+            num = [0] * 11
+            for course_selection in course_selections:
+                if course_selection.gpa is not None:
+                    num[int(course_selection.gpa * 2)] += 1
+            return Response({'num': num})
 
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
