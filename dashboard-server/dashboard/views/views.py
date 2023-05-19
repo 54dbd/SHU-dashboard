@@ -96,11 +96,11 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         dataset['source'] = source + data
         return Response({'dataset': dataset})
 
+
     @action(detail=False, methods=['get'])
     def getStudentGpaBySemester(self, request, *args, **kwargs):
         student = Student.objects.get(user_id=self.request.user.id)
         course_selections = CourseSelection.objects.filter(student_id=student)
-        dataset = {}
         gpa = []
         semester_id = []
         for course_selection in course_selections:
@@ -114,9 +114,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
                 gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
                 credit_sum += course_selection.class_id.course_id.credit
             gpa.append(round(gpa_sum / credit_sum, 2))
-        dataset['gpa'] = gpa
-        dataset['semester_id'] = semester_id
-        return Response({'dataset': dataset})
+        return Response({'gpa': gpa, 'semester_id': semester_id})
 
 
 class ClassViewSet(viewsets.ModelViewSet):
