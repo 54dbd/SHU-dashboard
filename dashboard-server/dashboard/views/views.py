@@ -82,6 +82,21 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return queryset.filter(student_id=self.request.user.id)
 
 
+    @action(detail=False, methods=['get'])
+    def getStudentScore(self, request, *args, **kwargs):
+        student = Student.objects.get(user_id=self.request.user.id)
+        course_selections = CourseSelection.objects.filter(student_id=student)
+        dataset = {}
+        source = [["score", "成绩", "课程"]]
+        data = []
+        for course_selection in course_selections:
+            if course_selection.grade is not None:
+                data.append([course_selection.grade, course_selection.gpa, course_selection.class_id.course_id.name])
+        dataset['source'] = source + data
+        return Response({'dataset': dataset})
+
+
+
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
