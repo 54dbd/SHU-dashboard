@@ -115,7 +115,30 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
                     gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
                     credit_sum += course_selection.class_id.course_id.credit
             gpa.append(round(gpa_sum / credit_sum, 2))
+        for i in range(len(semester_id)):
+            semester_id[i] = Semester.objects.get(semester_id=semester_id[i]).name
         return Response({'gpa': gpa, 'semester_id': semester_id})
+
+    @action(detail=False, methods=['get'])
+    def getStudentGpa(self, request, *args, **kwargs):
+        teacher = Teacher.objects.get(user_id=self.request.user.id)
+        classes = Class.objects.filter(teacher_id=teacher)
+        data = []
+        for class_ in classes:
+            course_selections = CourseSelection.objects.filter(class_id=class_)
+            gpa_sum = 0
+            gpa_count = 0
+            for course_selection in course_selections:
+                if course_selection.gpa is not None:
+                    gpa_sum += course_selection.gpa
+                    gpa_count += 1
+            if gpa_count == 0:
+                gpa = 0
+            else:
+                gpa = round(gpa_sum / gpa_count, 2)
+            data.append({'class_id': class_.class_id, 'course_name': class_.course_id.name,
+                         'semester': class_.semester_id.name, 'gpa': gpa})
+        return Response(data)
 
 
 class ClassViewSet(viewsets.ModelViewSet):
