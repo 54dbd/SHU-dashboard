@@ -53,7 +53,9 @@ function handleError(content) {
 }
 export default function data() {
   const [id, setId] = useState(0);
+  const [teachers, setTeachers] = useState([]);
   const [Courses, setCourses] = useState([]);
+  const [getCourse, setGetCourse] = useState([]);
   const [open, setOpen] = useState(false);
   const [openNew, setOpenNew] = useState(false);
   const [result, setResult] = useState({ code: 0, content: "" });
@@ -85,7 +87,6 @@ export default function data() {
           .get("/department/")
           .then((response) => {
             setDepartments(response.data);
-            console.log(departments);
           })
           .catch((error) => {
             alert(error);
@@ -94,7 +95,22 @@ export default function data() {
           .get("/semester/")
           .then((response) => {
             setSemesters(response.data);
-            console.log(semesters);
+          })
+          .catch((error) => {
+            alert(error);
+          });
+        api
+          .get("/teacher/")
+          .then((response) => {
+            setTeachers(response.data);
+          })
+          .catch((error) => {
+            alert(error);
+          });
+        api
+          .get("/course/")
+          .then((response) => {
+            setGetCourse(response.data);
           })
           .catch((error) => {
             alert(error);
@@ -125,15 +141,15 @@ export default function data() {
   function handleClick(Course) {
     console.log(departments);
     setOpen(true);
-    setId(Course.Course_id);
+    setId(Course.course_id);
     changeInformation(Course);
   }
   function handleRemove(Course) {
-    console.log("删除课程", Course.Course_id);
-    api.delete(`/class/${Course.Course_id}/`).then(() => {
-      setResult({ code: 200, content: "删除课程成功!" });
+    console.log("删除课程", Course.course_id);
+    api.delete(`/class/${Course.course_id}/`).then(() => {
+      handleSuccess("删除课程成功!");
       setCourses((prevCourses) =>
-        prevCourses.filter((prevCourse) => prevCourse.Course_id !== Course.Course_id)
+        prevCourses.filter((prevCourse) => prevCourse.course_id !== Course.course_id)
       );
     });
   }
@@ -223,7 +239,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleCloseModify, departments, semesters, handleError)}
+        {submitForm(id, handleCloseModify, departments, semesters, teachers, handleError)}
       </Modal>
     );
   }
@@ -235,7 +251,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitNew(id, handleCloseNew, departments, semesters, handleError)}
+        {submitNew(handleCloseNew, departments, semesters, teachers, getCourse, handleError)}
       </Modal>
     );
   }
@@ -277,8 +293,8 @@ export default function data() {
         pauseOnHover
         theme="colored"
       />
-      {modalModify(submitForm)}
-      {modalNew(submitNew)}
+      {modalModify()}
+      {modalNew()}
     </MDBox>
   );
 }

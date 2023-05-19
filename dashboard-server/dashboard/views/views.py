@@ -116,11 +116,30 @@ class ClassViewSet(viewsets.ModelViewSet):
         instance.delete()
 
     # 课程查询
-    # def get_queryset(self):
-    #     if self.request.user.is_superuser:
-    #         return Class.objects.all()
-    #     else:
-    #         return Class.objects.filter(teacher_id=self.request.user.id)
+    def get_queryset(self):
+        semester_id = self.request.query_params.get('semester_id', None)
+
+        course_id = self.request.query_params.get('course_id', None)
+        # 获取符合条件的 CourseSelection 对象
+        if semester_id is not None:
+            queryset = Class.objects.filter(semester_id=semester_id)
+        else:
+            queryset = Class.objects.all()
+        # 添加额外的过滤条件
+        if course_id is not None:
+            queryset = queryset.filter(course_id=course_id)
+        # 根据用户角色返回不同的数据
+        if self.request.user.is_superuser:
+            return queryset.all()
+        elif self.request.user.is_staff:
+            if course_id is None:
+                teacher = Teacher.objects.get(user_id_id=self.request.user.id)
+                return queryset.filter(teacher_id=teacher)
+            elif queryset.filter(course_id=course_id,
+                                 teacher_id__user_id=self.request.user.id).exists():
+                return queryset.filter(course_id=course_id)
+        else:
+            return queryset
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -129,10 +148,13 @@ class CourseViewSet(viewsets.ModelViewSet):
     lookup_field = 'course_id'
     permission_classes = [IsAdminUserOrReadOnly]
 
-    def perform_create(self, serializer):
-        dept_id = self.request.data.get('dept_id')
-        serializer.save(dept_id=dept_id)
 
+    def perform_create(self, serializer):
+        # 主动设置class_id
+        course_id = self.request.data.get('course_id')
+        dept_id = self.request.data.get('dept_id')
+        serializer.save(course_id=course_id, dept_id=dept_id)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
@@ -147,11 +169,11 @@ class CourseViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError({'course_id': '该课程已经有学生选了，不能删除'})
         self.perform_destroy(instance)
 
-    def get_queryset(self):
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return Course.objects.all()
-        else:
-            return Course.objects.filter(dept_id=self.request.user.dept_id)
+    # def get_queryset(self):
+    #     if self.request.user.is_superuser or self.request.user.is_staff:
+    #         return Course.objects.all()
+    #     else:
+    #         return Course.objects.filter(dept_id=self.request.user.dept_id)
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
@@ -220,6 +242,20 @@ class StudentViewSet(viewsets.ModelViewSet):
         instance.user_id.delete()
         instance.delete()
 
+    @action(detail=True, methods=['get'])
+    def courses(self, request, *args, **kwargs):
+        student = self.get_object()
+        student = Student.objects.get(user_id=student.user_id)
+        courses = CourseSelection.objects.filter(student_id=student).values('class_id__course_id', 'class_id__course_id__name').distinct()
+        return Response(courses)
+
+    @action(detail=True, methods=['get'])
+    def semesters(self, request, *args, **kwargs):
+        student = self.get_object()
+        student = Student.objects.get(user_id=student.user_id)
+        # 学期根据semester_id唯一
+        semesters = CourseSelection.objects.filter(student_id=student).values('class_id__semester_id__semester_id', 'class_id__semester_id__name').distinct()
+        return Response(semesters)
 
 class TeacherViewSet(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
@@ -248,7 +284,6 @@ class TeacherViewSet(viewsets.ModelViewSet):
     def courses(self, request, *args, **kwargs):
         teacher = self.get_object()
         teacher = Teacher.objects.get(user_id=teacher.user_id)
-
         courses = Class.objects.filter(teacher_id_id=teacher).values('course_id_id', 'course_id__name').distinct()
         return Response(courses)
 

@@ -18,10 +18,10 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
     def create(self, validated_data):
-        dept_id = validated_data.get('dept_id', None)
+        dept_id = self.initial_data.get('dept_id', None)
         dept = Department.objects.get(pk=dept_id)
         validated_data.update(dept_id=dept)
-        return super().create(validated_data)
+        return super(CourseSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
         course_id = self.data.get('course_id', None)

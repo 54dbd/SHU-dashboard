@@ -59,6 +59,7 @@ export default function data() {
   const [result, setResult] = useState({ code: 0, content: "" });
   const CourseID = localStorage.getItem("id");
   const [departments, setDepartments] = useState([]);
+  const [semester, setSemester] = useState([]);
 
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
@@ -84,6 +85,15 @@ export default function data() {
           .get("/department/")
           .then((response) => {
             setDepartments(response.data);
+            console.log(departments);
+          })
+          .catch((error) => {
+            alert(error);
+          });
+        api
+          .get("/semester/")
+          .then((response) => {
+            setSemester(response.data);
             console.log(departments);
           })
           .catch((error) => {
@@ -201,7 +211,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleCloseModify, departments, handleError)}
+        {submitForm(id, handleCloseModify, semester, handleError)}
       </Modal>
     );
   }

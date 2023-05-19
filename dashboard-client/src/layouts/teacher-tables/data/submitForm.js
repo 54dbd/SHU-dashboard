@@ -36,11 +36,9 @@ function submitForm(id, handleClose, departments) {
     console.log(id);
     api
       .put(`/teacher/${id}/`, formData)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Success");
-          handleClose();
-        }
+      .then(() => {
+        console.log("Success");
+        handleClose();
       })
       .catch((error) => {
         alert(error);

@@ -47,9 +47,11 @@ function Header({ children }) {
     },
   });
   useEffect(() => {
-    api.get(`/user/${id}`).then((response) => {
-      setGpa(response.data.student.gpa);
-    });
+    if (id) {
+      api.get(`/user/${id}`).then((response) => {
+        setGpa(response.data.student.gpa);
+      });
+    }
   }, [id]);
 
   return (

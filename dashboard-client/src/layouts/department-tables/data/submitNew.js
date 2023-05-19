@@ -37,11 +37,9 @@ function submitNew(id, handleClose, departments) {
   const submit = () => {
     api
       .post("/department/", formData)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Success");
-          handleClose();
-        }
+      .then(() => {
+        console.log("Success");
+        handleClose();
       })
       .catch((error) => {
         alert(error);

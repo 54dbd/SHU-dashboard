@@ -15,6 +15,7 @@ import MDProgress from "components/MDProgress";
 function submitNew(id, handleClose, departments) {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [courseName, setCourseName] = useState("");
+  const [courseId, setCourseId] = useState("");
   const [credit, setCredit] = useState("");
   const [percentage, setPercentage] = useState("");
   const style = {
@@ -35,6 +36,7 @@ function submitNew(id, handleClose, departments) {
   });
 
   const formData = new FormData();
+  formData.append("course_id", courseId);
   formData.append("credit", credit);
   formData.append("gp_percentage", percentage);
   formData.append("dept_id", selectedDepartment);
@@ -42,11 +44,10 @@ function submitNew(id, handleClose, departments) {
   const submit = () => {
     api
       .post("/course/", formData)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Success");
-          handleClose();
-        }
+      .then(() => {
+        console.log("Success");
+        handleClose();
+        setPercentage("");
       })
       .catch((error) => {
         alert(error);
@@ -66,11 +67,20 @@ function submitNew(id, handleClose, departments) {
         textAlign="center"
       >
         <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-          添加教师
+          添加课程
         </MDTypography>
       </MDBox>
       <MDBox pt={4} pb={3} px={3}>
         <MDBox component="form" role="form">
+          <MDBox mb={3}>
+            <MDInput
+              type="number"
+              size="small"
+              label="课程号"
+              fullWidth
+              onChange={(event) => setCourseId(event.target.value)}
+            />
+          </MDBox>
           <MDBox mb={3}>
             <MDInput
               type="text"
@@ -92,7 +102,7 @@ function submitNew(id, handleClose, departments) {
                 const index = departments.findIndex(
                   (department) => department.name === newInputValue
                 );
-                setSelectedDepartment(index + 1);
+                setSelectedDepartment(departments[index].dept_id);
               }}
             />
           </MDBox>

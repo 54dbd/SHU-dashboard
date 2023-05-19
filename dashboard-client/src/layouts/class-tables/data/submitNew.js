@@ -11,11 +11,19 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import MDInput from "components/MDInput";
 // eslint-disable-next-line no-unused-vars
-function submitNew(id, handleClose, departments, semesters) {
+function submitNew(handleClose, departments, semesters, teachers, courses, handleError) {
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState("");
-  const [ClassId, setClassId] = useState("");
-  const [ClassName, setClassName] = useState("");
+  const [selectedTeacher, setSelectedTeacher] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedStart, setSelectedStart] = useState("");
+  const [selectedEnd, setSelectedEnd] = useState("");
+  const [classSize, setClassSize] = useState("");
+  const [classroom, setClassroom] = useState("");
+  const starts = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+  const ends = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+  const times = ["一", "二", "三", "四", "五", "六", "日"];
   const style = {
     position: "absolute",
     top: "50%",
@@ -32,19 +40,23 @@ function submitNew(id, handleClose, departments, semesters) {
       Authorization: `Bearer  ${localStorage.getItem("token")}`,
     },
   });
-
+  console.log(selectedCourses);
   const formData = new FormData();
   formData.append("dept_id", selectedDepartment);
-  formData.append("Class_id", ClassId);
-  formData.append("name", ClassName);
+  formData.append("course_id", selectedCourses);
+  formData.append("teacher_id", selectedTeacher);
+  formData.append("classroom", classroom);
+  formData.append("max_selection", classSize);
+  formData.append("time", selectedTime);
+  formData.append("start", selectedStart);
+  formData.append("end", selectedEnd);
+  formData.append("semester_id", selectedSemester);
   const submit = () => {
     api
       .post("/class/", formData)
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("Success");
-          handleClose();
-        }
+      .then(() => {
+        console.log("Success");
+        handleClose();
       })
       .catch((error) => {
         alert(error);
@@ -64,18 +76,23 @@ function submitNew(id, handleClose, departments, semesters) {
         textAlign="center"
       >
         <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-          添加教师
+          添加开课
         </MDTypography>
       </MDBox>
       <MDBox pt={4} pb={3} px={3}>
         <MDBox component="form" role="form">
           <MDBox mb={3}>
-            <MDInput
-              type="number"
+            <Autocomplete
+              disablePortal
+              id="课程"
               size="small"
-              label="课程名"
-              fullWidth
-              onChange={(event) => setCourseName(event.target.value)}
+              options={courses}
+              getOptionLabel={(option) => option.name}
+              renderInput={(params) => <TextField {...params} label="课程" />}
+              onInputChange={(event, newInputValue) => {
+                const index = courses.findIndex((course) => course.name === newInputValue);
+                setSelectedCourses(courses[index].course_id);
+              }}
             />
           </MDBox>
           <MDBox mb={3}>
@@ -88,7 +105,7 @@ function submitNew(id, handleClose, departments, semesters) {
               renderInput={(params) => <TextField {...params} label="学期" />}
               onInputChange={(event, newInputValue) => {
                 const index = semesters.findIndex((semester) => semester.name === newInputValue);
-                selectedSemester(index + 1);
+                setSelectedSemester(semesters[index].semester_id);
               }}
             />
           </MDBox>
@@ -105,7 +122,7 @@ function submitNew(id, handleClose, departments, semesters) {
                 const index = departments.findIndex(
                   (department) => department.name === newInputValue
                 );
-                setSelectedDepartment(index + 1);
+                setSelectedDepartment(departments[index].dept_id);
               }}
             />
           </MDBox>
@@ -119,7 +136,43 @@ function submitNew(id, handleClose, departments, semesters) {
               renderInput={(params) => <TextField {...params} label="老师" />}
               onInputChange={(event, newInputValue) => {
                 const index = teachers.findIndex((teacher) => teacher.name === newInputValue);
-                selectedTeacher(index + 1);
+                setSelectedTeacher(teachers[index].teacher_id);
+              }}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <Autocomplete
+              disablePortal
+              id="上课日"
+              size="small"
+              options={times}
+              renderInput={(params) => <TextField {...params} label="上课日" />}
+              onInputChange={(event, newInputValue) => {
+                setSelectedTime(newInputValue);
+              }}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <Autocomplete
+              disablePortal
+              id="课程开始节数"
+              size="small"
+              options={starts}
+              renderInput={(params) => <TextField {...params} label="课程开始时间" />}
+              onInputChange={(event, newInputValue) => {
+                setSelectedStart(newInputValue);
+              }}
+            />
+          </MDBox>
+          <MDBox mb={3}>
+            <Autocomplete
+              disablePortal
+              id="课程结束节数"
+              size="small"
+              options={ends}
+              renderInput={(params) => <TextField {...params} label="课程结束时间" />}
+              onInputChange={(event, newInputValue) => {
+                setSelectedEnd(newInputValue);
               }}
             />
           </MDBox>
@@ -134,9 +187,9 @@ function submitNew(id, handleClose, departments, semesters) {
           </MDBox>
           <MDBox mb={3}>
             <MDInput
-              type="number"
+              type="text"
               size="small"
-              label="上课时间"
+              label="上课教室"
               fullWidth
               onChange={(event) => setClassroom(event.target.value)}
             />

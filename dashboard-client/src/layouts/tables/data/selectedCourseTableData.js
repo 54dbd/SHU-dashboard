@@ -31,6 +31,7 @@ import MDBox from "../../../components/MDBox";
 export default function data(courseFilter, semesterFilter, courseNameFilter, semesterNameFilter) {
   const [courses, setCourses] = useState([]);
   const [result, setResult] = useState({ code: 0, content: "" });
+  const [refresh, setRefresh] = useState(false);
   const bounce = cssTransition({
     enter: "animate__animated animate__bounceIn",
     exit: "animate__animated animate__bounceOut",
@@ -89,7 +90,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         setResult({ code: 404, content: "获取课程失败!" });
         handleError(result.content);
       });
-  }, []);
+  }, [refresh, courseFilter, semesterFilter]);
 
   function removeCourse(course) {
     const classId = course.class_id.class_id;
@@ -104,6 +105,7 @@ export default function data(courseFilter, semesterFilter, courseNameFilter, sem
         setCourses((prevCourses) =>
           prevCourses.filter((prevCourse) => prevCourse.class_id !== classId)
         );
+        setRefresh(!refresh);
       })
       .catch(() => {
         handleError("已经有成绩啦!不能退课啦!");
