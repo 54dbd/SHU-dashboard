@@ -91,7 +91,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         data = []
         for course_selection in course_selections:
             if course_selection.grade is not None:
-                data.append([course_selection.grade, course_selection.gpa, course_selection.class_id.course_id.name])
+                data.append([course_selection.gpa, course_selection.grade, course_selection.class_id.course_id.name])
         dataset['source'] = source + data
         return Response({'dataset': dataset})
 
