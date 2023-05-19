@@ -96,6 +96,27 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
         dataset['source'] = source + data
         return Response({'dataset': dataset})
 
+    @action(detail=False, methods=['get'])
+    def getStudentGpaBySemester(self, request, *args, **kwargs):
+        student = Student.objects.get(user_id=self.request.user.id)
+        course_selections = CourseSelection.objects.filter(student_id=student)
+        dataset = {}
+        gpa = []
+        semester_id = []
+        for course_selection in course_selections:
+            if course_selection.class_id.semester_id.semester_id not in semester_id:
+                semester_id.append(course_selection.class_id.semester_id.semester_id)
+        for semester in semester_id:
+            semester_gpa = CourseSelection.objects.filter(student_id=student, class_id__semester_id=semester)
+            gpa_sum = 0
+            credit_sum = 0
+            for course_selection in semester_gpa:
+                gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
+                credit_sum += course_selection.class_id.course_id.credit
+            gpa.append(round(gpa_sum / credit_sum, 2))
+        dataset['gpa'] = gpa
+        dataset['semester_id'] = semester_id
+        return Response({'dataset': dataset})
 
 
 class ClassViewSet(viewsets.ModelViewSet):
