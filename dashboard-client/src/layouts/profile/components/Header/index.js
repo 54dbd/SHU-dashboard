@@ -49,7 +49,7 @@ function Header({ children }) {
   useEffect(() => {
     if (id) {
       api.get(`/user/${id}`).then((response) => {
-        setGpa(response.data.student.gpa);
+        setGpa(response.data.student.gpa.toFixed(2));
       });
     }
   }, [id]);

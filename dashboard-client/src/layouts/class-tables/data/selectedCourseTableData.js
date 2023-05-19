@@ -118,31 +118,10 @@ export default function data() {
       });
   }, [CourseID, open, openNew]);
 
-  function changeInformation(Course) {
-    console.log(Course);
-    // api
-    //   .delete(`/Course-selection/`, {
-    //     data: {
-    //       class_id: classId,
-    //     },
-    //   })
-    //   .then(() => {
-    //     setResult({ code: 200, content: "删除课程成功!" });
-    //     setCourses((prevCourses) =>
-    //       prevCourses.filter((prevCourse) => prevCourse.class_id !== classId)
-    //     );
-    //     // 刷新页面
-    //     // window.location.reload();
-    //   })
-    //   .catch(() => {
-    //     setResult({ code: 404, content: "已经有成绩啦!不能退课啦!" });
-    //   });
-  }
   function handleClick(Course) {
-    console.log(departments);
+    // console.log(Course);
     setOpen(true);
-    setId(Course.course_id);
-    changeInformation(Course);
+    setId(Course.class_id);
   }
   function handleRemove(Course) {
     console.log("删除课程", Course.course_id);
@@ -203,30 +182,26 @@ export default function data() {
       </MDTypography>
     ),
     action: (
-      <Grid spacing={1} direction="row">
+      <Grid container spacing={1} direction="row">
         <Grid item>
-          <MDTypography
-            component="a"
-            href="#"
-            variant="caption"
+          <MDButton
+            variant="outlined"
             color="info"
             fontWeight="medium"
             onClick={() => handleClick(Course)}
           >
             修改信息
-          </MDTypography>
+          </MDButton>
         </Grid>
         <Grid item>
-          <MDTypography
-            component="a"
-            href="#"
-            variant="caption"
+          <MDButton
+            variant="outlined"
             color="error"
             fontWeight="medium"
             onClick={() => handleRemove(Course)}
           >
             删除
-          </MDTypography>
+          </MDButton>
         </Grid>
       </Grid>
     ),
@@ -239,7 +214,7 @@ export default function data() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {submitForm(id, handleCloseModify, departments, semesters, teachers, handleError)}
+        {submitForm(id, handleCloseModify, semesters, teachers, handleError)}
       </Modal>
     );
   }

@@ -40,7 +40,7 @@ export default function data() {
   useEffect(() => {
     if (condition) {
       api
-        .get(`/course-selection`)
+        .get(`/course-selection/getStudentGpa/`)
         .then((response) => {
           setCourses(response.data);
           // console.log(response.data);
@@ -54,37 +54,31 @@ export default function data() {
 
   return {
     columns: [
+      { Header: "开课ID", accessor: "class_id", align: "left" },
       { Header: "课程名", accessor: "course_name", align: "left" },
-      { Header: "课程号", accessor: "course_id", width: "10%", align: "left" },
-      { Header: "综合成绩", accessor: "grade", align: "center" },
-      { Header: "绩点", accessor: "gpa", align: "center" },
-      { Header: "课程学分", accessor: "credit", align: "center" },
+      { Header: "学期", accessor: "semester", align: "center" },
+      { Header: "综合绩点", accessor: "gpa", align: "center" },
     ],
 
     rows: courses.map((course) => ({
+      class_id: (
+        <MDTypography variant="caption" fontWeight="medium">
+          {course.class_id}
+        </MDTypography>
+      ),
       course_name: (
         <MDTypography variant="caption" fontWeight="medium">
-          {course.class_id.course_id.name}
+          {course.course_name}
         </MDTypography>
       ),
-      course_id: (
+      semester: (
         <MDTypography variant="caption" fontWeight="medium">
-          {course.class_id.course_id.course_id}
-        </MDTypography>
-      ),
-      grade: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.grade || "无成绩"}
+          {course.semester}
         </MDTypography>
       ),
       gpa: (
         <MDTypography variant="caption" fontWeight="medium">
-          {course.gpa || "无成绩"}
-        </MDTypography>
-      ),
-      credit: (
-        <MDTypography variant="caption" fontWeight="medium">
-          {course.class_id.course_id.credit}
+          {course.gpa || 0}
         </MDTypography>
       ),
     })),

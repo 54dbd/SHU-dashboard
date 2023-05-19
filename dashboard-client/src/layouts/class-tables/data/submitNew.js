@@ -40,7 +40,6 @@ function submitNew(handleClose, departments, semesters, teachers, courses, handl
       Authorization: `Bearer  ${localStorage.getItem("token")}`,
     },
   });
-  console.log(selectedCourses);
   const formData = new FormData();
   formData.append("dept_id", selectedDepartment);
   formData.append("course_id", selectedCourses);

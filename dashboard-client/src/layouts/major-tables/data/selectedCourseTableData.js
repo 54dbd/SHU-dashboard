@@ -104,18 +104,16 @@ export default function data() {
       </MDTypography>
     ),
     action: (
-      <Grid spacing={1} direction="row">
+      <Grid container spacing={1} direction="row">
         <Grid item>
-          <MDTypography
-            component="a"
-            href="#"
-            variant="caption"
+          <MDButton
+            variant="outlined"
             color="error"
             fontWeight="medium"
             onClick={() => handleRemove(major)}
           >
             删除
-          </MDTypography>
+          </MDButton>
         </Grid>
       </Grid>
     ),

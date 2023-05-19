@@ -21,8 +21,8 @@ class Class(models.Model):
     class Meta:
         ordering = ['course_id']
         constraints = [
-            models.UniqueConstraint(fields=['teacher_id', 'time', 'start', 'end'], name='teacher_time'),
-            models.UniqueConstraint(fields=['time', 'start', 'end', 'classroom'], name='time_classroom'),
+            models.UniqueConstraint(fields=['teacher_id', 'time', 'start', 'end', 'semester_id'], name='teacher_time'),
+            models.UniqueConstraint(fields=['time', 'start', 'end', 'classroom', 'semester_id'], name='time_classroom'),
         ]
 
 
@@ -48,7 +48,7 @@ class CourseSelection(models.Model):
     grade = models.FloatField(blank=True, null=True)
     #    can_drop            tinyint(1) not null,
     gpa = models.FloatField(blank=True, null=True)
-    can_drop = models.IntegerField(blank=True, null=True)
+    can_drop = models.IntegerField(blank=True, default=1)
 
     class Meta:
         ordering = ['course_selection_id']

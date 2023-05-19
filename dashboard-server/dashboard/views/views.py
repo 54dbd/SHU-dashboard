@@ -177,7 +177,6 @@ class ClassViewSet(viewsets.ModelViewSet):
     # 课程查询
     def get_queryset(self):
         semester_id = self.request.query_params.get('semester_id', None)
-
         course_id = self.request.query_params.get('course_id', None)
         # 获取符合条件的 CourseSelection 对象
         if semester_id is not None:
