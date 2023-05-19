@@ -111,8 +111,9 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             gpa_sum = 0
             credit_sum = 0
             for course_selection in semester_gpa:
-                gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
-                credit_sum += course_selection.class_id.course_id.credit
+                if course_selection.gpa is not None:
+                    gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
+                    credit_sum += course_selection.class_id.course_id.credit
             gpa.append(round(gpa_sum / credit_sum, 2))
         return Response({'gpa': gpa, 'semester_id': semester_id})
 
