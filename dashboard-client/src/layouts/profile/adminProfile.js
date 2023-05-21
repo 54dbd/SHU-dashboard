@@ -72,8 +72,12 @@ function adminProfile() {
               {StudentDistributionChartBySemester(selectedSemester.id)}
             </Grid>
             <Grid item xs={12} xl={4}>
+              <MDBadge badgeContent={selectedSemester.id} container color="error" />
               <MDTypography variant="h4" fontWeight="medium">
                 学期
+              </MDTypography>
+              <MDTypography variant="h6" fontWeight="regular">
+                {selectedSemester.name}
               </MDTypography>
               {semesterData(setSelectedSemester)}
             </Grid>
