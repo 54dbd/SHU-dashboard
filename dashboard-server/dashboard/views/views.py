@@ -121,8 +121,11 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def getStudentGpa(self, request, *args, **kwargs):
-        teacher = Teacher.objects.get(user_id=self.request.user.id)
-        classes = Class.objects.filter(teacher_id=teacher)
+        if self.request.user.is_superuser:
+            classes = Class.objects.all()
+        elif self.request.user.is_staff:
+            teacher = Teacher.objects.get(user_id=self.request.user.id)
+            classes = Class.objects.filter(teacher_id=teacher)
         data = []
         for class_ in classes:
             course_selections = CourseSelection.objects.filter(class_id=class_)
@@ -155,6 +158,36 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
                 if course_selection.gpa is not None:
                     num[int(course_selection.gpa * 2)] += 1
             return Response({'num': num})
+
+    @action(detail=False, methods=['get'])
+    def getStudentDistributionBySemester(self):
+        semester_id = self.request.query_params.get('semester_id', None)
+        if semester_id is not None:
+            course_selections = CourseSelection.objects.filter(class_id__semester_id=semester_id)
+            num = [0] * 11
+            flag = [0,1.0,1.5,1.7,2.0,2.3,2.7,3.0,3.3,3.7,4.0]
+            for course_selection in course_selections:
+                if course_selection.gpa is not None:
+                    for i in range(11):
+                        if course_selection.gpa == flag[i]:
+                            num[i] += 1
+                            break
+            return Response({'num': num})
+
+    @action(detail=False, methods=['get'])
+    def getStudentDistributionByAllSemester(self, request):
+        course_selections = CourseSelection.objects.all()
+        num = [0] * 11
+        flag = [0,1.0,1.5,1.7,2.0,2.3,2.7,3.0,3.3,3.7,4.0]
+        for course_selection in course_selections:
+            if course_selection.gpa is not None:
+                for i in range(11):
+                    if course_selection.gpa == flag[i]:
+                        num[i] += 1
+                        break
+        for i in range(11):
+            num[i] = round(num[i] / len(Semester.objects.all()), 2)
+        return Response({'num': num})
 
 class ClassViewSet(viewsets.ModelViewSet):
     queryset = Class.objects.all()
