@@ -127,6 +127,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             teacher = Teacher.objects.get(user_id=self.request.user.id)
             classes = Class.objects.filter(teacher_id=teacher)
         data = []
+        classes = Class.objects.order_by('class_id')
         for class_ in classes:
             course_selections = CourseSelection.objects.filter(class_id=class_)
             gpa_sum = 0
