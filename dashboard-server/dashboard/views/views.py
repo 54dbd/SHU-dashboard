@@ -162,7 +162,7 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
             return Response({'num': num})
 
     @action(detail=False, methods=['get'])
-    def getStudentDistributionBySemester(self):
+    def getStudentDistributionBySemester(self,request):
         semester_id = self.request.query_params.get('semester_id', None)
         if semester_id is not None:
             course_selections = CourseSelection.objects.filter(class_id__semester_id=semester_id)
