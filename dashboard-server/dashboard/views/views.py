@@ -99,7 +99,10 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def getStudentGpaBySemester(self, request, *args, **kwargs):
-        student = Student.objects.get(user_id=self.request.user.id)
+        if self.request.user.is_superuser:
+            student = Student.objects.get(student_id=self.request.query_params.get('student_id', None))
+        else:
+            student = Student.objects.get(user_id=self.request.user.id)
         course_selections = CourseSelection.objects.filter(student_id=student)
         gpa = []
         semester_id = []
@@ -114,7 +117,10 @@ class CourseSelectionViewSet(viewsets.ModelViewSet):
                 if course_selection.gpa is not None:
                     gpa_sum += course_selection.gpa * course_selection.class_id.course_id.credit
                     credit_sum += course_selection.class_id.course_id.credit
-            gpa.append(round(gpa_sum / credit_sum, 2))
+            if credit_sum == 0:
+                gpa.append(0)
+            else:
+                gpa.append(round(gpa_sum / credit_sum, 2))
         for i in range(len(semester_id)):
             semester_id[i] = Semester.objects.get(semester_id=semester_id[i]).name
         return Response({'gpa': gpa, 'semester_id': semester_id})
