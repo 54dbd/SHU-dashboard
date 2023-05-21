@@ -25,7 +25,7 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 // Overview page components
-import Header from "layouts/profile/components/Header_noGpa";
+import Header from "layouts/profile/components/Header";
 // Data
 // Images
 import GPAAreaChart from "./components/GPAAreaChart";

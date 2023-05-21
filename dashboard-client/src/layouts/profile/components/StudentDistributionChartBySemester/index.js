@@ -2,9 +2,8 @@ import ReactEcharts from "echarts-for-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function StudentDistributionChart(selectedCourse) {
+function StudentDistributionChartBySemester(selectedSemester) {
   const [num, setNum] = useState([]);
-  const role = localStorage.getItem("UserPermission");
   const api = axios.create({
     baseURL: `http://localhost:8000/v1/`,
     headers: {
@@ -14,15 +13,23 @@ function StudentDistributionChart(selectedCourse) {
   });
 
   useEffect(() => {
-    let url = "/course-selection/getStudentDistribution/";
-    if (selectedCourse) {
-      url += `?class_id=${selectedCourse}`;
+    if (selectedSemester === "0") {
+      api.get("/course-selection/getStudentDistributionByAllSemester/").then((response) => {
+        console.log("Success");
+        setNum(response.data.num);
+      });
+    } else {
+      console.log(selectedSemester);
+      let url = "/course-selection/getStudentDistributionBySemester/";
+      if (selectedSemester) {
+        url += `?semester_id=${selectedSemester}`;
+      }
+      api.get(url).then((response) => {
+        console.log("Success");
+        setNum(response.data.num);
+      });
     }
-    api.get(url).then((response) => {
-      console.log("Success");
-      setNum(response.data.num);
-    });
-  }, [selectedCourse]);
+  }, [selectedSemester]);
   const option = {
     xAxis: {
       type: "category",
@@ -45,13 +52,11 @@ function StudentDistributionChart(selectedCourse) {
       {
         data: num,
         type: "bar",
-
-        // 如果role是teacher，那么颜色就是#eb4844，否则就是#5ab25e和#0f3443
-        color: role === "admin" ? "#eb4844" : ["#5ab25e", "#0f3443"],
+        color: "#eb4844",
       },
     ],
   };
-  return <ReactEcharts option={option} style={{ minHeight: "680px", width: "100%" }} />;
+  return <ReactEcharts option={option} style={{ height: "700px", width: "100%" }} />;
 }
 
-export default StudentDistributionChart;
+export default StudentDistributionChartBySemester;

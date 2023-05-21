@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // @mui material components
 import Grid from "@mui/material/Grid";
-
+import MDBadge from "components/MDBadge";
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
@@ -28,12 +28,12 @@ import Footer from "examples/Footer";
 import Header from "layouts/profile/components/Header_noGpa";
 // Data
 // Images
-import DataTable from "../../examples/Tables/DataTable";
+import { useState } from "react";
 import teacherCourseGpaData from "./data/teacherCourseGpaData";
 import StudentDistributionChart from "./components/StudentDistributionChart";
 
 function teacherProfile() {
-  const { columns, rows } = teacherCourseGpaData();
+  const [selectedCourse, setSelectedCourse] = useState({});
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -44,23 +44,20 @@ function teacherProfile() {
             <MDTypography variant="h4" fontWeight="bold">
               成绩表
             </MDTypography>
-            <DataTable
-              table={{ columns: columns.valueOf(), rows: rows.valueOf() }}
-              isSorted={false}
-              entriesPerPage={false}
-              showTotalEntries={false}
-              noEndBorder
-            />
+            {teacherCourseGpaData(setSelectedCourse)}
           </Grid>
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
+          <MDBadge badgeContent={selectedCourse.id} container color="success" />
           <MDTypography variant="h4" fontWeight="medium">
             课程绩点分布
           </MDTypography>
-          <StudentDistributionChart />
+          <MDTypography variant="h6" fontWeight="regular">
+            {selectedCourse.name}
+          </MDTypography>
+          {StudentDistributionChart(selectedCourse.id)}
         </MDBox>
       </Header>
-
       <Footer />
     </DashboardLayout>
   );

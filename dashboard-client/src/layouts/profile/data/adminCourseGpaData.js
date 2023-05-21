@@ -83,7 +83,7 @@ export default function data(setSelectedCourse) {
     actions: (
       <MDButton
         variant="outlined"
-        color="success"
+        color="error"
         onClick={() => {
           setSelectedCourse({ id: course.class_id, name: course.course_name });
         }}

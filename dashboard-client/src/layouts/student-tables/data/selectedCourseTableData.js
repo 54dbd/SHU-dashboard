@@ -164,7 +164,7 @@ export default function data() {
     ),
     gpa: (
       <MDTypography variant="caption" fontWeight="medium">
-        {student.gpa}
+        {parseFloat(student.gpa).toFixed(2)}
       </MDTypography>
     ),
     department: (

@@ -24,17 +24,20 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import { useState } from "react";
+import MDBadge from "components/MDBadge";
 // Overview page components
 import Header from "layouts/profile/components/Header_noGpa";
 // Data
 // Images
-import GPAAreaChart from "./components/GPAAreaChart";
-import CourseBarChart from "./components/CourseBarChart";
-import DataTable from "../../examples/Tables/DataTable";
-import selectedCourseTableData from "./data/selectedCourseTableData";
+import adminCourseGpaData from "./data/adminCourseGpaData";
+import semesterData from "./data/semesterData";
+import StudentDistributionChart from "./components/StudentDistributionChart";
+import StudentDistributionChartBySemester from "./components/StudentDistributionChartBySemester";
 
 function adminProfile() {
-  const { columns, rows } = selectedCourseTableData();
+  const [selectedCourse, setSelectedCourse] = useState({});
+  const [selectedSemester, setSelectedSemester] = useState({});
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -42,31 +45,39 @@ function adminProfile() {
       <Header>
         <MDBox mt={5} mb={3}>
           <Grid container spacing={1}>
-            <Grid item>
+            <Grid item xl={6} xs={12}>
               <MDTypography variant="h4" fontWeight="bold">
                 成绩表
               </MDTypography>
-              <DataTable
-                table={{ columns: columns.valueOf(), rows: rows.valueOf() }}
-                isSorted={false}
-                entriesPerPage={false}
-                showTotalEntries={false}
-                noEndBorder
-              />
+              {adminCourseGpaData(setSelectedCourse)}
             </Grid>
             <Grid item xs={12} xl={6}>
-              <MDTypography variant="h4" fontWeight="bold">
-                课程分数
+              <MDBadge badgeContent={selectedCourse.id} container color="error" />
+              <MDTypography variant="h4" fontWeight="medium">
+                课程绩点分布
               </MDTypography>
-              <CourseBarChart />
+              <MDTypography variant="h6" fontWeight="regular">
+                {selectedCourse.name}
+              </MDTypography>
+              {StudentDistributionChart(selectedCourse.id)}
             </Grid>
           </Grid>
         </MDBox>
         <MDBox pt={2} px={2} lineHeight={1.25}>
-          <MDTypography variant="h4" fontWeight="medium">
-            GPA走势图
-          </MDTypography>
-          <GPAAreaChart />
+          <Grid container spacing={1}>
+            <Grid item xs={12} xl={8}>
+              <MDTypography variant="h4" fontWeight="medium">
+                全校成绩分布
+              </MDTypography>
+              {StudentDistributionChartBySemester(selectedSemester.id)}
+            </Grid>
+            <Grid item xs={12} xl={4}>
+              <MDTypography variant="h4" fontWeight="medium">
+                学期
+              </MDTypography>
+              {semesterData(setSelectedSemester)}
+            </Grid>
+          </Grid>
         </MDBox>
       </Header>
 
