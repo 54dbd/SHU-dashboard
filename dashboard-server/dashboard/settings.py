@@ -118,13 +118,13 @@ WSGI_APPLICATION = 'dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':  'school',
-        'USER': 'admin',
-        'PASSWORD': 'admin@123',
-        'HOST': '116.63.153.200',
+        'NAME':  '[your database]',
+        'USER': '[username]',
+        'PASSWORD': '[password]',
+        'HOST': '[xxx.xxx.xxx.xxx]',
         'PORT': '5432',
         'OPTIONS': {
-            'options': '-c search_path=school'
+            'options': '-c search_path=[your schema]'
         },
 
     }
